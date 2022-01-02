@@ -196,6 +196,12 @@
   id: PlantSampleTaker
 
 - type: Tag
+  id: PosterContraband
+
+- type: Tag
+  id: PosterLegit
+
+- type: Tag
   id: Powerdrill
 
 - type: Tag
