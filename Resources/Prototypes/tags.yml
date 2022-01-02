@@ -1,9 +1,6 @@
 # Alphabetical order is now apparently required.
 
 - type: Tag
-  id: AirAlarmElectronics
-
-- type: Tag
   id: Baguette
 
 - type: Tag
@@ -112,9 +109,6 @@
   id: ExplosivePassable
 
 - type: Tag
-  id: FireAlarmElectronics
-
-- type: Tag
   id: FireAxe
 
 - type: Tag
@@ -187,9 +181,6 @@
   id: Pill
 
 - type: Tag
-  id: PillCanister
-
-- type: Tag
   id: Pipe
 
 - type: Tag
@@ -203,6 +194,12 @@
 
 - type: Tag
   id: PlantSampleTaker
+
+- type: Tag
+  id: PosterContraband
+
+- type: Tag
+  id: PosterLegit
 
 - type: Tag
   id: Powerdrill
