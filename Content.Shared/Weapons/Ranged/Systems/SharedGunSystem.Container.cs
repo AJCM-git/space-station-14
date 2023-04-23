@@ -19,7 +19,8 @@ public partial class SharedGunSystem
 
     private void OnContainerTakeAmmo(EntityUid uid, ContainerAmmoProviderComponent component, TakeAmmoEvent args)
     {
-        if (!_container.TryGetContainer(uid, component.Container, out var container))
+        component.ProviderUid ??= uid;
+        if (!_container.TryGetContainer(component.ProviderUid.Value, component.Container, out var container))
             return;
 
         for (int i = 0; i < args.Shots; i++)
@@ -38,7 +39,8 @@ public partial class SharedGunSystem
 
     private void OnContainerAmmoCount(EntityUid uid, ContainerAmmoProviderComponent component, ref GetAmmoCountEvent args)
     {
-        if (!_container.TryGetContainer(uid, component.Container, out var container))
+        component.ProviderUid ??= uid;
+        if (!_container.TryGetContainer(component.ProviderUid.Value, component.Container, out var container))
         {
             args.Capacity = 0;
             args.Count = 0;

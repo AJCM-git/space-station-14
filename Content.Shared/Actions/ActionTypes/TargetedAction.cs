@@ -7,6 +7,7 @@ namespace Content.Shared.Actions.ActionTypes;
 [Serializable, NetSerializable]
 public abstract class TargetedAction : ActionType
 {
+
     /// <summary>
     ///     For entity- or map-targeting actions, if this is true the action will remain selected after it is used, so
     ///     it can be continuously re-used. If this is false, the action will be deselected after one use.
@@ -74,6 +75,20 @@ public abstract class TargetedAction : ActionType
 public class EntityTargetAction : TargetedAction
 {
     /// <summary>
+    ///     The local-event to raise when this action is selected.
+    /// </summary>
+    [NonSerialized]
+    [DataField("selectedEvent")]
+    public BaseActionEvent? SelectedEvent;
+
+    /// <summary>
+    ///     The local-event to raise when this action is selected.
+    /// </summary>
+    [NonSerialized]
+    [DataField("deselectedEvent")]
+    public BaseActionEvent? DeselectedEvent;
+
+    /// <summary>
     ///     The local-event to raise when this action is performed.
     /// </summary>
     [NonSerialized]
@@ -121,6 +136,20 @@ public class EntityTargetAction : TargetedAction
 [Virtual]
 public class WorldTargetAction : TargetedAction
 {
+    /// <summary>
+    ///     The local-event to raise when this action is selected.
+    /// </summary>
+    [NonSerialized]
+    [DataField("selectedEvent")]
+    public BaseActionEvent? SelectedEvent;
+
+    /// <summary>
+    ///     The local-event to raise when this action is selected.
+    /// </summary>
+    [NonSerialized]
+    [DataField("deselectedEvent")]
+    public BaseActionEvent? DeselectedEvent;
+
     /// <summary>
     ///     The local-event to raise when this action is performed.
     /// </summary>

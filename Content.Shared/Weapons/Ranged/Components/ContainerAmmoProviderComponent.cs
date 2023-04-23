@@ -10,4 +10,7 @@ public sealed class ContainerAmmoProviderComponent : AmmoProviderComponent
 {
     [DataField("container", required: true)]
     public string Container = default!;
+
+    [DataField("provider")]
+    public EntityUid? ProviderUid;
 }

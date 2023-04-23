@@ -45,12 +45,27 @@ public sealed class RequestPerformActionEvent : EntityEventArgs
     public readonly ActionType Action;
     public readonly EntityUid? EntityTarget;
     public readonly EntityCoordinates? EntityCoordinatesTarget;
+    public readonly bool Selected;
+    public readonly bool Deselected;
 
     public RequestPerformActionEvent(InstantAction action)
     {
         Action = action;
     }
 
+    public RequestPerformActionEvent(EntityTargetAction action, bool selected, bool deselected)
+    {
+        Action = action;
+        Selected = selected;
+        Deselected = deselected;
+    }
+
+    public RequestPerformActionEvent(WorldTargetAction action, bool selected, bool deselected)
+    {
+        Action = action;
+        Selected = selected;
+        Deselected = deselected;
+    }
     public RequestPerformActionEvent(EntityTargetAction action, EntityUid entityTarget)
     {
         Action = action;

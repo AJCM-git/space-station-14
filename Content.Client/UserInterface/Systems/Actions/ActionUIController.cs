@@ -20,7 +20,6 @@ using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Client.UserInterface.Controls;
-using Robust.Client.Utility;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
 using Robust.Shared.Timing;
@@ -47,6 +46,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
     [UISystemDependency] private readonly ActionsSystem? _actionsSystem = default;
     [UISystemDependency] private readonly InteractionOutlineSystem? _interactionOutline = default;
     [UISystemDependency] private readonly TargetOutlineSystem? _targetOutline = default;
+    [UISystemDependency] private readonly SpriteSystem _spriteSystem = default!;
 
     private const int DefaultPageIndex = 0;
     private ActionButtonContainer? _container;
@@ -190,7 +190,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
         if (!_timing.IsFirstTimePredicted || _actionsSystem == null || SelectingTargetFor is not { } action)
             return false;
 
-        if (_playerManager.LocalPlayer?.ControlledEntity is not EntityUid user)
+        if (_playerManager.LocalPlayer?.ControlledEntity is not { } user)
             return false;
 
         if (!_entities.TryGetComponent(user, out ActionsComponent? comp))
@@ -414,6 +414,9 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
 
     private void OnActionAdded(ActionType action)
     {
+        if (action is TargetedAction targetAction && action.Toggled)
+            StartTargeting(targetAction);
+
         foreach (var page in _pages)
         {
             for (var i = 0; i < page.Size; i++)
@@ -433,6 +436,9 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
     {
         if (_container == null)
             return;
+
+        if (action == SelectingTargetFor)
+            StopTargeting();
 
         foreach (var button in _container.GetButtons())
         {
@@ -736,7 +742,7 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
             }
             else if (action.Icon != null)
             {
-                _dragShadow.Texture = action.Icon!.Frame0();
+                _dragShadow.Texture = _spriteSystem.Frame0(action.Icon);
             }
             else
             {
@@ -935,28 +941,57 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
                 handOverlay.EntityOverride = action.Provider;
             }
             else if (action.Toggled && action.IconOn != null)
-                handOverlay.IconOverride = action.IconOn.Frame0();
+                handOverlay.IconOverride = _spriteSystem.Frame0(action.IconOn);
             else if (action.Icon != null)
-                handOverlay.IconOverride = action.Icon.Frame0();
+                handOverlay.IconOverride = _spriteSystem.Frame0(action.Icon);
         }
 
-        // TODO: allow world-targets to check valid positions. E.g., maybe:
-        // - Draw a red/green ghost entity
-        // - Add a yes/no checkmark where the HandItemOverlay usually is
-
-        // Highlight valid entity targets
-        if (action is not EntityTargetAction entityAction)
+        if (_actionsSystem == null)
             return;
 
-        Func<EntityUid, bool>? predicate = null;
+        switch (action)
+        {
+            /* TODO OPTIMIZATION: This fires for actions that do not have a SelectedEvent
+             but we cant filter for that because events fields are null on the client */
+            case WorldTargetAction worldAction:
+                if (worldAction is { ClientExclusive: true, SelectedEvent: { } })
+                {
+                    _actionsSystem.PerformAction(worldAction.SelectedEvent.Performer, null, action, worldAction.SelectedEvent, _timing.CurTime);
+                    return;
+                }
 
-        if (!entityAction.CanTargetSelf)
-            predicate = e => e != entityAction.AttachedEntity;
+                _entities.RaisePredictiveEvent(new RequestPerformActionEvent(worldAction, true, false));
+                return;
 
-        var range = entityAction.CheckCanAccess ? action.Range : -1;
+            case EntityTargetAction entityAction:
+                if (entityAction is { ClientExclusive: true, SelectedEvent: { } })
+                {
+                    _actionsSystem.PerformAction(entityAction.SelectedEvent.Performer, null, action, entityAction.SelectedEvent, _timing.CurTime);
+                    return;
+                }
 
-        _interactionOutline?.SetEnabled(false);
-        _targetOutline?.Enable(range, entityAction.CheckCanAccess, predicate, entityAction.Whitelist, null);
+                _entities.RaisePredictiveEvent(new RequestPerformActionEvent(entityAction, true, false));
+
+                // TODO: allow world-targets to check valid positions. E.g., maybe:
+                // - Draw a red/green ghost entity
+                // - Add a yes/no checkmark where the HandItemOverlay usually is
+
+                // Highlight valid entity targets
+                Func<EntityUid, bool>? predicate = null;
+
+                if (!entityAction.CanTargetSelf)
+                    predicate = e => e != entityAction.AttachedEntity;
+
+                var range = entityAction.CheckCanAccess ? action.Range : -1;
+
+                _interactionOutline?.SetEnabled(false);
+                _targetOutline?.Enable(range, entityAction.CheckCanAccess, predicate, entityAction.Whitelist, null);
+                return;
+
+            default:
+                Logger.Error($"Unknown targeting action: {action.GetType()}");
+                return;
+        }
     }
 
     /// <summary>
@@ -966,6 +1001,43 @@ public sealed class ActionUIController : UIController, IOnStateChanged<GameplayS
     {
         if (SelectingTargetFor == null)
             return;
+
+        if (_actionsSystem == null)
+            return;
+
+        if (SelectingTargetFor.Cooldown.HasValue && SelectingTargetFor.Cooldown.Value.End > _timing.CurTime)
+            return;
+
+        switch (SelectingTargetFor)
+        {
+            /* TODO OPTIMIZATION: This fires for actions that do not have a SelectedEvent
+             but we cant filter for that because events fields are null on the client */
+            case WorldTargetAction worldAction:
+                if (worldAction is { ClientExclusive: true, SelectedEvent: { } })
+                {
+                    _actionsSystem.PerformAction(worldAction.SelectedEvent.Performer, null, SelectingTargetFor,
+                        worldAction.SelectedEvent, _timing.CurTime);
+                    break;
+                }
+
+                _entities.RaisePredictiveEvent(new RequestPerformActionEvent(worldAction, false, true));
+                break;
+
+            case EntityTargetAction entityAction:
+                if (entityAction is { ClientExclusive: true, SelectedEvent: { } })
+                {
+                    _actionsSystem.PerformAction(entityAction.SelectedEvent.Performer, null, SelectingTargetFor,
+                        entityAction.SelectedEvent, _timing.CurTime);
+                    break;
+                }
+
+                _entities.RaisePredictiveEvent(new RequestPerformActionEvent(entityAction, false, true));
+                break;
+
+            default:
+                Logger.Error($"Unknown targeting action: {SelectingTargetFor.GetType()}");
+                break;
+        }
 
         SelectingTargetFor = null;
         _targetOutline?.Disable();

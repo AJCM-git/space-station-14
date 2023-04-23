@@ -6,7 +6,6 @@ using Content.Shared.Hands;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Popups;
-using Robust.Shared.Audio;
 using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Map;
@@ -27,6 +26,7 @@ public abstract class SharedActionsSystem : EntitySystem
     [Dependency] private readonly RotateToFaceSystem _rotateToFaceSystem = default!;
     [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
+    [Dependency] private readonly SharedTransformSystem _transformSystem = default!;
 
     public override void Initialize()
     {
@@ -98,7 +98,7 @@ public abstract class SharedActionsSystem : EntitySystem
     /// </summary>
     private void OnActionRequest(RequestPerformActionEvent ev, EntitySessionEventArgs args)
     {
-        if (args.SenderSession.AttachedEntity is not EntityUid user)
+        if (args.SenderSession.AttachedEntity is not { } user)
             return;
 
         if (!TryComp(user, out ActionsComponent? component))
@@ -127,6 +127,30 @@ public abstract class SharedActionsSystem : EntitySystem
         switch (act)
         {
             case EntityTargetAction entityAction:
+                if (ev.Deselected)
+                {
+                    // SelectedEvent is null on the client so the execution would continue and error in the next
+                    // condition if we combine these two checks with an &&
+                    if (entityAction.DeselectedEvent != null)
+                    {
+                        Logger.Debug($"{entityAction.DeselectedEvent}");
+                        performEvent = entityAction.DeselectedEvent;
+                        break;
+                    }
+                    return;
+                }
+
+                if (ev.Selected)
+                {
+                    // SelectedEvent is null on the client so the execution would continue and error in the next
+                    // condition if we combine these two checks with an &&
+                    if (entityAction.SelectedEvent != null)
+                    {
+                        performEvent = entityAction.SelectedEvent;
+                        break;
+                    }
+                    return;
+                }
 
                 if (ev.EntityTarget is not { Valid: true } entityTarget)
                 {
@@ -134,29 +158,58 @@ public abstract class SharedActionsSystem : EntitySystem
                     return;
                 }
 
-                _rotateToFaceSystem.TryFaceCoordinates(user, Transform(entityTarget).WorldPosition);
+                var targetWorldPos = _transformSystem.GetWorldPosition(entityTarget);
+                _rotateToFaceSystem.TryFaceCoordinates(user, targetWorldPos);
 
                 if (!ValidateEntityTarget(user, entityTarget, entityAction))
                     return;
 
                 if (act.Provider == null)
+                {
                     _adminLogger.Add(LogType.Action,
-                    $"{ToPrettyString(user):user} is performing the {name:action} action targeted at {ToPrettyString(entityTarget):target}.");
+                        $"{ToPrettyString(user):user} is performing the {name:action} action targeted at {ToPrettyString(entityTarget):target}.");
+                }
                 else
+                {
                     _adminLogger.Add(LogType.Action,
-                    $"{ToPrettyString(user):user} is performing the {name:action} action (provided by {ToPrettyString(act.Provider.Value):provider}) targeted at {ToPrettyString(entityTarget):target}.");
+                        $"{ToPrettyString(user):user} is performing the {name:action} action (provided by {ToPrettyString(act.Provider.Value):provider}) targeted at {ToPrettyString(entityTarget):target}.");
+                }
 
                 if (entityAction.Event != null)
                 {
                     entityAction.Event.Target = entityTarget;
-                    performEvent = entityAction.Event;
                 }
 
+                performEvent = entityAction.Event;
                 break;
 
             case WorldTargetAction worldAction:
+                if (ev.Deselected)
+                {
+                    // SelectedEvent is null on the client so the execution would continue and error in the next
+                    // condition if we combine these two checks with an &&
+                    if (worldAction.DeselectedEvent != null)
+                    {
+                        Logger.Debug($"{worldAction.DeselectedEvent}");
+                        performEvent = worldAction.DeselectedEvent;
+                        break;
+                    }
+                    return;
+                }
 
-                if (ev.EntityCoordinatesTarget is not EntityCoordinates entityCoordinatesTarget)
+                if (ev.Selected)
+                {
+                    // SelectedEvent is null on the client so the execution would continue and error in the next
+                    // condition if we combine these two checks with an &&
+                    if (worldAction.SelectedEvent != null)
+                    {
+                        performEvent = worldAction.SelectedEvent;
+                        break;
+                    }
+                    return;
+                }
+
+                if (ev.EntityCoordinatesTarget is not { } entityCoordinatesTarget)
                 {
                     Logger.Error($"Attempted to perform a world-targeted action without a target! Action: {worldAction.DisplayName}");
                     return;
@@ -168,18 +221,22 @@ public abstract class SharedActionsSystem : EntitySystem
                     return;
 
                 if (act.Provider == null)
+                {
                     _adminLogger.Add(LogType.Action,
                         $"{ToPrettyString(user):user} is performing the {name:action} action targeted at {entityCoordinatesTarget:target}.");
+                }
                 else
+                {
                     _adminLogger.Add(LogType.Action,
                         $"{ToPrettyString(user):user} is performing the {name:action} action (provided by {ToPrettyString(act.Provider.Value):provider}) targeted at {entityCoordinatesTarget:target}.");
+                }
 
                 if (worldAction.Event != null)
                 {
                     worldAction.Event.Target = entityCoordinatesTarget;
-                    performEvent = worldAction.Event;
                 }
 
+                performEvent = worldAction.Event;
                 break;
 
             case InstantAction instantAction:
@@ -188,11 +245,15 @@ public abstract class SharedActionsSystem : EntitySystem
                     return;
 
                 if (act.Provider == null)
+                {
                     _adminLogger.Add(LogType.Action,
                         $"{ToPrettyString(user):user} is performing the {name:action} action.");
+                }
                 else
+                {
                     _adminLogger.Add(LogType.Action,
                         $"{ToPrettyString(user):user} is performing the {name:action} action provided by {ToPrettyString(act.Provider.Value):provider}.");
+                }
 
                 performEvent = instantAction.Event;
                 break;
@@ -231,7 +292,8 @@ public abstract class SharedActionsSystem : EntitySystem
             if (action.Range <= 0)
                 return true;
 
-            return (xform.WorldPosition - targetXform.WorldPosition).Length <= action.Range;
+            var distance = (_transformSystem.GetWorldPosition(xform) - _transformSystem.GetWorldPosition(targetXform)).Length;
+            return distance <= action.Range;
         }
 
         if (_interactionSystem.InRangeUnobstructed(user, target, range: action.Range)
@@ -259,7 +321,7 @@ public abstract class SharedActionsSystem : EntitySystem
             if (action.Range <= 0)
                 return true;
 
-            return coords.InRange(EntityManager, Transform(user).Coordinates, action.Range);
+            return coords.InRange(EntityManager, _transformSystem, Transform(user).Coordinates, action.Range);
         }
 
         return _interactionSystem.InRangeUnobstructed(user, coords, range: action.Range);
@@ -356,7 +418,7 @@ public abstract class SharedActionsSystem : EntitySystem
 
         comp ??= EnsureComp<ActionsComponent>(uid);
         action.Provider = provider;
-        action.AttachedEntity = comp.Owner;
+        action.AttachedEntity = uid;
         AddActionInternal(comp, action);
 
         // for client-exclusive actions, the client shouldn't mark the comp as dirty. Otherwise that just leads to
@@ -426,7 +488,7 @@ public abstract class SharedActionsSystem : EntitySystem
     private void OnDidEquip(EntityUid uid, ActionsComponent component, DidEquipEvent args)
     {
         var ev = new GetItemActionsEvent(args.SlotFlags);
-        RaiseLocalEvent(args.Equipment, ev, false);
+        RaiseLocalEvent(args.Equipment, ev);
 
         if (ev.Actions.Count == 0)
             return;
@@ -437,7 +499,7 @@ public abstract class SharedActionsSystem : EntitySystem
     private void OnHandEquipped(EntityUid uid, ActionsComponent component, DidEquipHandEvent args)
     {
         var ev = new GetItemActionsEvent();
-        RaiseLocalEvent(args.Equipped, ev, false);
+        RaiseLocalEvent(args.Equipped, ev);
 
         if (ev.Actions.Count == 0)
             return;
