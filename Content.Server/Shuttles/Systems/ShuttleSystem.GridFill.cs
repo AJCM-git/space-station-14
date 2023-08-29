@@ -3,6 +3,7 @@ using Content.Server.Station.Components;
 using Content.Server.Station.Events;
 using Content.Shared.Cargo.Components;
 using Content.Shared.CCVar;
+using Content.Shared.Shuttles.Components;
 
 namespace Content.Server.Shuttles.Systems;
 
@@ -115,7 +116,7 @@ public sealed partial class ShuttleSystem
 
                 if (config != null)
                 {
-                    FTLDock(config, shuttleXform);
+                    FTLDock(ent[0], config, shuttleXform);
 
                     if (TryComp<StationMemberComponent>(xform.GridUid, out var stationMember))
                     {

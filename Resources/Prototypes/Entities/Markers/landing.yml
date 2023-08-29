@@ -1,0 +1,31 @@
+- type: entity
+  id: MarkerLandingSupplyPodBase
+  name: supply pod landing zone
+  description: Looks like something is about to land here.... Would be wise to make some room!
+  #abstract: true
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Transform
+    anchored: true
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Sprite
+    drawdepth: Overdoors
+    sprite: Markers/telegraph.rsi
+    state: target_circle
+  - type: TimedDespawn
+    lifetime: 5
+  - type: SpawnOnDespawn
+    landingDamage:
+      types:
+        Blunt: 500
+    arrivingSound:
+      path: /Audio/Effects/Shuttle/hyperspace_progress.ogg
+      params:
+        loop: true
+        volume: 10
+    landingSound:
+      path: Resources/Audio/Effects/Pods/pod_long_whistle.ogg
+    spawnEntries:
+      - id: SupplyPodBase

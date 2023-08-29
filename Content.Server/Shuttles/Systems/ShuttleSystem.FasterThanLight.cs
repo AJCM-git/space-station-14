@@ -15,7 +15,6 @@ using Content.Server.Shuttles.Events;
 using Content.Shared.Body.Components;
 using Content.Shared.Buckle.Components;
 using Content.Shared.Doors.Components;
-using Content.Shared.Mobs.Components;
 using Content.Shared.Shuttles.Components;
 using JetBrains.Annotations;
 using Robust.Shared.Map.Components;
@@ -143,12 +142,10 @@ public sealed partial class ShuttleSystem
         _console.RefreshShuttleConsoles();
     }
 
-    /// <summary>
-    /// Moves a shuttle from its current position to the target one. Goes through the hyperspace map while the timer is running.
-    /// </summary>
-    public void FTLTravel(
+    /// <inheritdoc/>>
+    public override void FTLTravel(
         EntityUid shuttleUid,
-        ShuttleComponent component,
+        ShuttleComponent? component,
         EntityCoordinates coordinates,
         float startupTime = DefaultStartupTime,
         float hyperspaceTime = DefaultTravelTime,
@@ -163,17 +160,19 @@ public sealed partial class ShuttleSystem
         hyperspace.TargetCoordinates = coordinates;
         hyperspace.Dock = false;
         hyperspace.PriorityTag = priorityTag;
-        _console.RefreshShuttleConsoles();
-        var ev = new FTLRequestEvent(_mapManager.GetMapEntityId(coordinates.ToMap(EntityManager, _transform).MapId));
-        RaiseLocalEvent(shuttleUid, ref ev, true);
+
+        if (component != null)
+        {
+            _console.RefreshShuttleConsoles();
+            var ev = new FTLRequestEvent(_mapManager.GetMapEntityId(coordinates.ToMap(EntityManager, _transform).MapId));
+            RaiseLocalEvent(shuttleUid, ref ev, true);
+        }
     }
 
-    /// <summary>
-    /// Moves a shuttle from its current position to docked on the target one. Goes through the hyperspace map while the timer is running.
-    /// </summary>
-    public void FTLTravel(
+    /// <inheritdoc/>>
+    public override void FTLTravel(
         EntityUid shuttleUid,
-        ShuttleComponent component,
+        ShuttleComponent? component,
         EntityUid target,
         float startupTime = DefaultStartupTime,
         float hyperspaceTime = DefaultTravelTime,
@@ -187,12 +186,14 @@ public sealed partial class ShuttleSystem
         hyperspace.TravelTime = hyperspaceTime;
         hyperspace.Accumulator = hyperspace.StartupTime;
         hyperspace.TargetUid = target;
-        hyperspace.Dock = dock;
+        hyperspace.Dock = component != null && dock;
         hyperspace.PriorityTag = priorityTag;
-        _console.RefreshShuttleConsoles();
+
+        if (component != null)
+            _console.RefreshShuttleConsoles();
     }
 
-    private bool TrySetupFTL(EntityUid uid, ShuttleComponent shuttle, [NotNullWhen(true)] out FTLComponent? component)
+    private bool TrySetupFTL(EntityUid uid, ShuttleComponent? shuttle, [NotNullWhen(true)] out FTLComponent? component)
     {
         component = null;
 
@@ -207,16 +208,22 @@ public sealed partial class ShuttleSystem
             dest.Enabled = false;
         }
 
-        _thruster.DisableLinearThrusters(shuttle);
-        _thruster.EnableLinearThrustDirection(shuttle, DirectionFlag.North);
-        _thruster.SetAngularThrust(shuttle, false);
-        // TODO: Maybe move this to docking instead?
-        SetDocks(uid, false);
+        if (shuttle != null)
+        {
+            _thruster.DisableLinearThrusters(shuttle);
+            _thruster.EnableLinearThrustDirection(shuttle, DirectionFlag.North);
+            _thruster.SetAngularThrust(shuttle, false);
+            // TODO: Maybe move this to docking instead?
+            SetDocks(uid, false);
+        }
 
         component = AddComp<FTLComponent>(uid);
         component.State = FTLState.Starting;
         // TODO: Need BroadcastGrid to not be bad.
-        SoundSystem.Play(_startupSound.GetSound(), Filter.Empty().AddInRange(Transform(uid).MapPosition, GetSoundRange(component.Owner)), _startupSound.Params);
+
+        var audioPlayerFilter = Filter.Empty().AddInRange(Transform(uid).MapPosition, GetSoundRange(uid), entMan: EntityManager);
+        _audio.PlayGlobal(_startupSound, audioPlayerFilter, true);
+
         // Make sure the map is setup before we leave to avoid pop-in (e.g. parallax).
         SetupHyperspace();
         return true;
@@ -250,8 +257,9 @@ public sealed partial class ShuttleSystem
                     var fromRotation = _transform.GetWorldRotation(xform);
 
                     var width = Comp<MapGridComponent>(uid).LocalAABB.Width;
-                    xform.Coordinates = new EntityCoordinates(_mapManager.GetMapEntityId(_hyperSpaceMap!.Value), new Vector2(_index + width / 2f, 0f));
-                    xform.LocalRotation = Angle.Zero;
+                    var entityCoordinates = new EntityCoordinates(_mapManager.GetMapEntityId(_hyperSpaceMap!.Value), new Vector2(_index + width / 2f, 0f));
+                    _transform.SetCoordinates(uid, xform, entityCoordinates, Angle.Zero);
+
                     _index += width + Buffer;
                     comp.Accumulator += comp.TravelTime - DefaultArrivalTime;
 
@@ -274,8 +282,8 @@ public sealed partial class ShuttleSystem
 
                     if (comp.TravelSound != null)
                     {
-                        comp.TravelStream = SoundSystem.Play(comp.TravelSound.GetSound(),
-                            Filter.Pvs(uid, 4f, entityManager: EntityManager), comp.TravelSound.Params);
+                        var playerFilter = Filter.Pvs(uid, 4f, EntityManager);
+                        comp.TravelStream = _audio.PlayGlobal(comp.TravelSound, playerFilter, true);
                     }
                     break;
                 // Arriving, play effects
@@ -336,7 +344,7 @@ public sealed partial class ShuttleSystem
                     }
                     else
                     {
-                        xform.Coordinates = comp.TargetCoordinates;
+                        _transform.SetCoordinates(uid, xform, comp.TargetCoordinates);
                         mapId = comp.TargetCoordinates.GetMapId(EntityManager);
                     }
 
@@ -506,7 +514,7 @@ public sealed partial class ShuttleSystem
 
         if (config != null)
         {
-            FTLDock(config, shuttleXform);
+            FTLDock(shuttleUid, config, shuttleXform);
             return true;
         }
 
@@ -517,10 +525,10 @@ public sealed partial class ShuttleSystem
     /// <summary>
     /// Forces an FTL dock.
     /// </summary>
-    public void FTLDock(DockingConfig config, TransformComponent shuttleXform)
+    public void FTLDock(EntityUid uid, DockingConfig config, TransformComponent shuttleXform)
     {
         // Set position
-        shuttleXform.Coordinates = config.Coordinates;
+        _transform.SetCoordinates(uid, shuttleXform, config.Coordinates);
         _transform.SetWorldRotation(shuttleXform, config.Angle);
 
         // Connect everything
@@ -591,14 +599,15 @@ public sealed partial class ShuttleSystem
             if (iteration != FTLProximityIterations)
                 continue;
 
-            foreach (var grid in _mapManager.GetAllGrids())
+            var query = EntityQueryEnumerator<MapGridComponent>();
+            while (query.MoveNext(out var ent, out var grid))
             {
                 // Don't add anymore as it is irrelevant, but that doesn't mean we need to re-do existing work.
-                if (nearbyGrids.Contains(grid.Owner))
+                if (nearbyGrids.Contains(ent))
                     continue;
 
-                targetAABB = targetAABB.Union(_transform.GetWorldMatrix(grid.Owner, xformQuery)
-                    .TransformBox(Comp<MapGridComponent>(grid.Owner).LocalAABB));
+                targetAABB = targetAABB.Union(_transform.GetWorldMatrix(ent, xformQuery)
+                    .TransformBox(Comp<MapGridComponent>(ent).LocalAABB));
             }
 
             break;
@@ -629,7 +638,8 @@ public sealed partial class ShuttleSystem
             spawnPos = _transform.GetWorldPosition(targetXform, xformQuery);
         }
 
-        xform.Coordinates = new EntityCoordinates(targetXform.MapUid.Value, spawnPos);
+        var targetEntityCoordinates = new EntityCoordinates(targetXform.MapUid.Value, spawnPos);
+        _transform.SetCoordinates(shuttleUid, xform, targetEntityCoordinates);
 
         if (!HasComp<MapComponent>(targetXform.GridUid))
         {

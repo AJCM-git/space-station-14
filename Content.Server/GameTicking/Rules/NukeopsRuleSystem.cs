@@ -29,6 +29,7 @@ using Content.Shared.Mobs.Components;
 using Content.Shared.Nuke;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
+using Content.Shared.Shuttles.Components;
 using Content.Shared.Zombies;
 using Robust.Server.GameObjects;
 using Robust.Server.Maps;

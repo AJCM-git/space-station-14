@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Made by MrDoomBringer (github) for tgstation at https://github.com/tgstation/tgstation/blob/c882dbdbd3af47fb6316d16f39e9aa7749cf2bac/icons/obj/supplypods.dmi",
+  "size": {
+    "x": 64,
+    "y": 64
+  },
+  "states": [
+    {
+      "name": "pod"
+    },
+    {
+      "name": "pod_reverse"
+    },
+    {
+      "name": "pod_door"
+    },
+    {
+      "name": "advpod"
+    },
+    {
+      "name": "advpod_reverse"
+    },
+    {
+      "name": "advpod_door"
+    },
+    {
+      "name": "darkpod"
+    },
+    {
+      "name": "darkpod_reverse"
+    },
+    {
+      "name": "darkpod_door"
+    },
+    {
+      "name": "default_branding"
+    },
+    {
+      "name": "bluespace_branding"
+    },
+    {
+      "name": "centcom_branding"
+    },
+    {
+      "name": "syndicate_branding"
+    },
+    {
+      "name": "cultist_branding"
+    },
+    {
+      "name": "deathsquad_branding"
+    },
+    {
+      "name": "clownpod"
+    },
+    {
+      "name": "clownpod_reverse"
+    },
+    {
+      "name": "clownpod_door"
+    },
+    {
+      "name": "clown_branding"
+    },
+    {
+      "name": "box"
+    },
+    {
+      "name": "box_door"
+    },
+    {
+      "name": "orange"
+    },
+    {
+      "name": "orange_door"
+    },
+    {
+      "name": "missile"
+    },
+    {
+      "name": "smissile"
+    },
+    {
+      "name": "rubble_fg"
+    },
+    {
+      "name": "rubble_bg"
+    },
+    {
+      "name": "rubble_fg_wide"
+    },
+    {
+      "name": "rubble_bg_wide"
+    },
+    {
+      "name": "rubble_fg_thin"
+    },
+    {
+      "name": "rubble_bg_thin"
+    },
+    {
+      "name": "gondola",
+      "directions": 4,
+      "delays": [
+        [
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1
+        ]
+      ]
+    },
+    {
+      "name": "gondola_open"
+    },
+    {
+      "name": "pod_glow_yellow"
+    },
+    {
+      "name": "pod_glow_blue"
+    },
+    {
+      "name": "pod_glow_red"
+    },
+    {
+      "name": "pod_glow_green"
+    },
+    {
+      "name": "mask_topfin"
+    },
+    {
+      "name": "mask_bottomfin"
+    },
+    {
+      "name": "invisible-icon"
+    },
+    {
+      "name": "seethrough-icon"
+    }
+  ]
+}

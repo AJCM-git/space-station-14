@@ -1,4 +1,5 @@
 using Content.Server.Shuttles.Components;
+using Content.Shared.Shuttles.Components;
 using Robust.Shared.Audio;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Dynamics;

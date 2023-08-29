@@ -1,0 +1,14 @@
+- files: ["pod_long_whistle.ogg"]
+  license: "CC-BY-SA-3.0"
+  copyright: "Made by MrDoomBringer (github) for tgstation"
+  source: "https://github.com/tgstation/tgstation/blob/c882dbdbd3af47fb6316d16f39e9aa7749cf2bac/sound/weapons/mortar_long_whistle.ogg"
+
+- files: ["pod_whistle.ogg"]
+  license: "CC-BY-SA-3.0"
+  copyright: "Made by MrDoomBringer (github) for tgstation"
+  source: "https://github.com/tgstation/tgstation/blob/c882dbdbd3af47fb6316d16f39e9aa7749cf2bac/sound/weapons/mortar_whistle.ogg"
+
+- files: ["pod_whoosh.ogg"]
+  license: "CC-BY-SA-3.0"
+  copyright: "Taken from tgstation"
+  source: "https://github.com/tgstation/tgstation/blob/c882dbdbd3af47fb6316d16f39e9aa7749cf2bac/sound/effects/podwoosh.ogg"

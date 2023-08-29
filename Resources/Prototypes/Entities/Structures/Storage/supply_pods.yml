@@ -1,0 +1,30 @@
+# Base
+- type: entity
+  parent: ClosetBase
+  id: SupplyPodBase
+  name: supply pod
+  description: A specialized supply pod that can phase through any ceiling without leaving a scratch.
+#  abstract: true
+  placement:
+    mode: SnapgridCenter
+  components:
+  - type: Sprite
+    noRot: true
+    sprite: Objects/Storage/supplypods.rsi
+    layers:
+      - state: pod
+        map: ["enum.StorageVisualLayers.Base"]
+      - state: pod_door
+        map: ["enum.StorageVisualLayers.Door"]
+      - state: pod_glow_blue
+      - state: rubble_bg
+      - state: rubble_fg
+  - type: EntityStorageVisuals
+    stateBaseClosed: pod
+    stateDoorOpen: pod
+    stateDoorClosed: pod_door
+  - type: EntityStorage
+    enteringOffset: 0, -0.5
+  - type: Transform
+    anchored: true
+  - type: TransportWithContained
