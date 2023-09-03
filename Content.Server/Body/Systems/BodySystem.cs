@@ -8,10 +8,9 @@ using Content.Server.Mind;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Organ;
 using Content.Shared.Body.Part;
-using Content.Shared.Body.Prototypes;
 using Content.Shared.Body.Systems;
-using Content.Shared.Coordinates;
 using Content.Shared.Humanoid;
+using Content.Shared.Mind;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Events;
 using Content.Shared.Random.Helpers;
@@ -58,7 +57,7 @@ public sealed class BodySystem : SharedBodySystem
             if (TryComp(slot.Child, out BodyPartComponent? child))
             {
                 child.ParentSlot = slot;
-                Dirty(slot.Child.Value);
+                Dirty(slot.Child.Value, child);
                 continue;
             }
 
@@ -75,7 +74,7 @@ public sealed class BodySystem : SharedBodySystem
             if (TryComp(slot.Child, out OrganComponent? child))
             {
                 child.ParentSlot = slot;
-                Dirty(slot.Child.Value);
+                Dirty(slot.Child.Value, child);
                 continue;
             }
 
@@ -101,19 +100,15 @@ public sealed class BodySystem : SharedBodySystem
         }
 
         child.ParentSlot = slot;
-        Dirty(slot.Child.Value);
+        Dirty(slot.Child.Value, child);
     }
 
     private void OnRelayMoveInput(EntityUid uid, BodyComponent component, ref MoveInputEvent args)
     {
-        if (_mobState.IsDead(uid) && _mindSystem.TryGetMind(uid, out var mind))
+        if (_mobState.IsDead(uid) && _mindSystem.TryGetMind(uid, out var mindId, out var mind))
         {
-            if (!mind.TimeOfDeath.HasValue)
-            {
-                mind.TimeOfDeath = _gameTiming.RealTime;
-            }
-
-            _ticker.OnGhostAttempt(mind, true);
+            mind.TimeOfDeath ??= _gameTiming.RealTime;
+            _ticker.OnGhostAttempt(mindId, true, mind: mind);
         }
     }
 
