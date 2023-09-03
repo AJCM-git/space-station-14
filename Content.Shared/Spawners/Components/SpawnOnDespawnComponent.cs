@@ -11,7 +11,7 @@ namespace Content.Shared.Spawners.Components;
 /// </summary>
 [RegisterComponent, NetworkedComponent]
 [Access(typeof(SpawnOnDespawnSystem))]
-public sealed class SpawnOnDespawnComponent : Component
+public sealed partial class SpawnOnDespawnComponent : Component
 {
     /// <summary>
     /// Which prototype to spawn on despawn
@@ -19,6 +19,8 @@ public sealed class SpawnOnDespawnComponent : Component
     [DataField("spawnEntries")]
     public List<EntitySpawnEntry> SpawnEntries = default!;
 
+    /// All these fields feel kinda icky since it doesnt seem like something this component should care about
+    /// TODO Move these to FTLComponent or something once i make the system work with non-shuttles (HyperspaceSystem when)
     [DataField("landingDamage")]
     [ViewVariables(VVAccess.ReadWrite)]
     public DamageSpecifier LandingDamage = default!;

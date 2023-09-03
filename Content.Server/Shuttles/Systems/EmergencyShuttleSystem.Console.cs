@@ -7,7 +7,6 @@ using Content.Shared.CCVar;
 using Content.Shared.Database;
 using Content.Shared.Popups;
 using Content.Shared.Shuttles.BUIStates;
-using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.Events;
 using Content.Shared.Shuttles.Systems;
 using Robust.Server.GameObjects;

@@ -5,7 +5,6 @@ using Content.Server.Station.Systems;
 using Content.Server.Stunnable;
 using Content.Shared.GameTicking;
 using Content.Shared.Mobs.Systems;
-using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.Systems;
 using JetBrains.Annotations;
 using Robust.Server.GameObjects;

@@ -17,6 +17,7 @@
       - state: pod_door
         map: ["enum.StorageVisualLayers.Door"]
       - state: pod_glow_blue
+      # TODO visualizer for these
       - state: rubble_bg
       - state: rubble_fg
   - type: EntityStorageVisuals
@@ -27,4 +28,5 @@
     enteringOffset: 0, -0.5
   - type: Transform
     anchored: true
-  - type: TransportWithContained
+
+# TODO The rest of pods since the sprites are now here

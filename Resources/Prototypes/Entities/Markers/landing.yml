@@ -29,3 +29,5 @@
       path: Resources/Audio/Effects/Pods/pod_long_whistle.ogg
     spawnEntries:
       - id: SupplyPodBase
+
+# TODO A marker for each pod type???
