@@ -364,6 +364,12 @@ namespace Content.Shared.CCVar
         public static readonly CVarDef<string> RoundEndSoundCollection =
             CVarDef.Create("game.round_end_sound_collection", "RoundEnd", CVar.SERVERONLY);
 
+        /// <summary>
+        /// Maximum amount of giblets allowed in the server before deletion, 0 means we won't limit the amount of giblets.
+        /// </summary>
+        public static readonly CVarDef<int> MaxGiblets =
+            CVarDef.Create("game.max_giblets", 0, CVar.SERVERONLY);
+
         /*
          * Discord
          */

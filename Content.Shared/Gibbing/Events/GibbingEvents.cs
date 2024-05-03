@@ -1,4 +1,5 @@
-﻿using Robust.Shared.Serialization;
+﻿using System.Numerics;
+using Robust.Shared.Serialization;
 
 namespace Content.Shared.Gibbing.Events;
 
@@ -48,3 +49,10 @@ public enum GibContentsOption : byte
     Drop,
     Gib
 }
+
+/// <param name="Launch">Should we launch giblets or just drop them</param>
+/// <param name="Direction">The direction to launch giblets</param>
+/// <param name="Impulse">The impulse to launch giblets at</param>
+/// <param name="ImpulseVariance">The variation in giblet launch impulse </param>
+/// <param name="ScatterCone">The cone we are launching giblets in</param>
+public record struct GibLaunchOptions(bool Launch = true, Vector2? Direction = null, float Impulse = 0f, float ImpulseVariance = 0f, Angle ScatterCone = default);
