@@ -341,17 +341,15 @@ public partial class SharedBodySystem
         {
 
             _gibbingSystem.TryGibEntityWithRef(bodyId, part.Id, GibType.Gib, GibContentsOption.Skip, ref gibs,
-                playAudio: false, launchGibs:true, launchDirection:splatDirection, launchImpulse: GibletLaunchImpulse * splatModifier,
-                launchImpulseVariance:GibletLaunchImpulseVariance, launchCone: splatCone);
+                new(Launch: true, Direction: splatDirection, Impulse: GibletLaunchImpulse * splatModifier, ImpulseVariance: GibletLaunchImpulseVariance), playAudio:false);
 
             if (!gibOrgans)
                 continue;
 
             foreach (var organ in GetPartOrgans(part.Id, part.Component))
             {
-                _gibbingSystem.TryGibEntityWithRef(bodyId, organ.Id, GibType.Drop, GibContentsOption.Skip,
-                    ref gibs, playAudio: false, launchImpulse: GibletLaunchImpulse * splatModifier,
-                    launchImpulseVariance:GibletLaunchImpulseVariance, launchCone: splatCone);
+                _gibbingSystem.TryGibEntityWithRef(bodyId, part.Id, GibType.Drop, GibContentsOption.Skip, ref gibs,
+                    new(Launch: true, Direction: splatDirection, Impulse: GibletLaunchImpulse * splatModifier, ImpulseVariance: GibletLaunchImpulseVariance), playAudio: false);
             }
         }
         if (TryComp<InventoryComponent>(bodyId, out var inventory))

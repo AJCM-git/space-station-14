@@ -1,4 +1,5 @@
-﻿using Content.Shared.Gibbing.Systems;
+﻿using Content.Shared.Gibbing.Events;
+using Content.Shared.Gibbing.Systems;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -31,4 +32,24 @@ public sealed partial class GibbableComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public float GibScatterRange = 0.3f;
+
+    /// <summary>
+    /// How much to multiply the random spread on dropped giblets(if we are dropping them!)
+    /// </summary>
+    public float RandomSpreadMod = 1.0f;
+
+    /// <summary>
+    /// What type of gibing are we performing
+    /// </summary>
+    public GibType GibType;
+
+    /// <summary>
+    /// What type of gibing do we perform on any container contents?
+    /// </summary>
+    public GibContentsOption GibContentsOption;
+
+    /// <summary>
+    /// Dictates if we should launch the gibs, how much impulse to we apply to them, etc
+    /// </summary>
+    public GibLaunchOptions LaunchOptions;
 }
