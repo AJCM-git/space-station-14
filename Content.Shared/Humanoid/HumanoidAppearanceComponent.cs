@@ -31,36 +31,36 @@ public sealed partial class HumanoidAppearanceComponent : Component
     public int Age = 18;
 
     /// <summary>
-    ///     Any custom base layers this humanoid might have. See:
-    ///     limb transplants (potentially), robotic arms, etc.
-    ///     Stored on the server, this is merged in the client into
-    ///     all layer settings.
+    /// Any custom base layers this humanoid might have. See:
+    /// limb transplants (potentially), robotic arms, etc.
+    /// Stored on the server, this is merged in the client into
+    /// all layer settings.
     /// </summary>
     [DataField, AutoNetworkedField]
     public Dictionary<HumanoidVisualLayers, CustomBaseLayerInfo> CustomBaseLayers = new();
 
     /// <summary>
-    ///     Current species. Dictates things like base body sprites,
-    ///     base humanoid to spawn, etc.
+    ///  Current species. Dictates things like base body sprites,
+    ///  base humanoid to spawn, etc.
     /// </summary>
     [DataField(required: true), AutoNetworkedField]
-    public ProtoId<SpeciesPrototype> Species { get; set; }
+    public ProtoId<SpeciesPrototype> Species;
 
     /// <summary>
-    ///     The initial profile and base layers to apply to this humanoid.
+    /// The initial profile and base layers to apply to this humanoid.
     /// </summary>
     [DataField]
     public ProtoId<HumanoidProfilePrototype>? Initial { get; private set; }
 
     /// <summary>
-    ///     Skin color of this humanoid.
+    /// Skin color of this humanoid.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public Color SkinColor { get; set; } = Color.FromHex("#C0967F");
+    public Color SkinColor = Color.FromHex("#C0967F");
 
     /// <summary>
-    ///     Visual layers currently hidden. This will affect the base sprite
-    ///     on this humanoid layer, and any markings that sit above it.
+    ///  Visual layers currently hidden. This will affect the base sprite
+    ///  on this humanoid layer, and any markings that sit above it.
     /// </summary>
     [DataField, AutoNetworkedField]
     public HashSet<HumanoidVisualLayers> HiddenLayers = new();
@@ -72,19 +72,7 @@ public sealed partial class HumanoidAppearanceComponent : Component
     public Color EyeColor = Color.Brown;
 
     /// <summary>
-    ///     Hair color of this humanoid. Used to avoid looping through all markings
-    /// </summary>
-    [ViewVariables(VVAccess.ReadOnly)]
-    public Color? CachedHairColor;
-
-    /// <summary>
-    ///     Facial Hair color of this humanoid. Used to avoid looping through all markings
-    /// </summary>
-    [ViewVariables(VVAccess.ReadOnly)]
-    public Color? CachedFacialHairColor;
-
-    /// <summary>
-    ///     Which layers of this humanoid that should be hidden on equipping a corresponding item..
+    /// Which layers of this humanoid that should be hidden on equipping a corresponding item..
     /// </summary>
     [DataField]
     public HashSet<HumanoidVisualLayers> HideLayersOnEquip = [HumanoidVisualLayers.Hair];
@@ -102,13 +90,13 @@ public readonly partial struct CustomBaseLayerInfo
     }
 
     /// <summary>
-    ///     ID of this custom base layer. Must be a <see cref="HumanoidSpeciesSpriteLayer"/>.
+    /// ID of this custom base layer. Must be a <see cref="HumanoidSpeciesSpriteLayer"/>.
     /// </summary>
     [DataField]
     public ProtoId<HumanoidSpeciesSpriteLayer>? Id { get; init; }
 
     /// <summary>
-    ///     Color of this custom base layer. Null implies skin colour if the corresponding <see cref="HumanoidSpeciesSpriteLayer"/> is set to match skin.
+    /// Color of this custom base layer. Null implies skin colour if the corresponding <see cref="HumanoidSpeciesSpriteLayer"/> is set to match skin.
     /// </summary>
     [DataField]
     public Color? Color { get; init; }

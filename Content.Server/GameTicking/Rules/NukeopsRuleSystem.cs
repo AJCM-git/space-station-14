@@ -1,7 +1,7 @@
 using Content.Server.Antag;
 using Content.Server.Communications;
 using Content.Server.GameTicking.Rules.Components;
-using Content.Server.Humanoid;
+using Content.Server.Humanoid.Systems;
 using Content.Server.Nuke;
 using Content.Server.NukeOps;
 using Content.Server.Popups;

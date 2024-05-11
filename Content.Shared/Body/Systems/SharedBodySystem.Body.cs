@@ -11,7 +11,6 @@ using Content.Shared.Gibbing.Components;
 using Content.Shared.Gibbing.Events;
 using Content.Shared.Gibbing.Systems;
 using Content.Shared.Inventory;
-using Content.Shared.Medical.Blood.Systems;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
@@ -94,7 +93,7 @@ public partial class SharedBodySystem
     private void OnBodyInit(Entity<BodyComponent> ent, ref ComponentInit args)
     {
         // Setup the initial container.
-        ent.Comp.RootContainer = Containers.EnsureContainer<ContainerSlot>(ent, BodyRootContainerId);
+        ent.Comp.RootContainer = _containers.EnsureContainer<ContainerSlot>(ent, BodyRootContainerId);
     }
 
     private void OnBodyMapInit(Entity<BodyComponent> body, ref MapInitEvent args)
@@ -104,7 +103,7 @@ public partial class SharedBodySystem
 
         // One-time setup
         // Obviously can't run in Init to avoid double-spawns on save / load.
-        var prototype = Prototypes.Index(body.Comp.Prototype.Value);
+        var prototype = _prototypes.Index(body.Comp.Prototype.Value);
         MapInitBody(body, prototype);
     }
 
@@ -186,9 +185,9 @@ public partial class SharedBodySystem
 
                 var childPartComponent = Comp<BodyPartComponent>(childPart);
                 var partSlot = CreatePartSlot(parentEntity, connection, childPartComponent.PartType, parentPartComponent);
-                var cont = Containers.GetContainer(parentEntity, GetPartSlotContainerId(connection));
+                var cont = _containers.GetContainer(parentEntity, GetPartSlotContainerId(connection));
 
-                if (partSlot is null || !Containers.Insert(childPart, cont))
+                if (partSlot is null || !_containers.Insert(childPart, cont))
                 {
                     Log.Error($"Could not create slot for connection {connection} in body {prototype.ID}");
                     QueueDel(childPart);
@@ -248,7 +247,7 @@ public partial class SharedBodySystem
         rootPart = null;
         if (!Resolve(target, ref bodyComp, logMissingBody))
             return false;
-        var foundEnt = ((ContainerSlot)Containers.GetContainer(target, bodyComp.RootPartSlot)).ContainedEntity;
+        var foundEnt = ((ContainerSlot)_containers.GetContainer(target, bodyComp.RootPartSlot)).ContainedEntity;
         if (foundEnt == null || !TryComp<BodyPartComponent>(foundEnt, out var rootPartComp))
             return false;
         rootPart = new Entity<BodyPartComponent>(foundEnt.Value, rootPartComp);
@@ -348,15 +347,15 @@ public partial class SharedBodySystem
 
             foreach (var organ in GetPartOrgans(part.Id, part.Component))
             {
-                _gibbingSystem.TryGibEntityWithRef(bodyId, part.Id, GibType.Drop, GibContentsOption.Skip, ref gibs,
+                _gibbingSystem.TryGibEntityWithRef(bodyId, organ.Id, GibType.Drop, GibContentsOption.Skip, ref gibs,
                     new(Launch: true, Direction: splatDirection, Impulse: GibletLaunchImpulse * splatModifier, ImpulseVariance: GibletLaunchImpulseVariance), playAudio: false);
             }
         }
         if (TryComp<InventoryComponent>(bodyId, out var inventory))
         {
-            foreach (var item in _inventory.GetHandOrInventoryEntities(bodyId))
+            foreach (var item in _inventory.GetHandOrInventoryEntities((bodyId, null, inventory)))
             {
-                SharedTransform.AttachToGridOrMap(item);
+                _sharedTransform.AttachToGridOrMap(item);
                 gibs.Add(item);
             }
         }

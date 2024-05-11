@@ -1,6 +1,6 @@
 ﻿using Content.Server.Cuffs;
 using Content.Server.Forensics;
-using Content.Server.Humanoid;
+using Content.Server.Humanoid.Systems;
 using Content.Server.Implants.Components;
 using Content.Server.Store.Components;
 using Content.Server.Store.Systems;
@@ -206,7 +206,7 @@ public sealed class SubdermalImplantSystem : SharedSubdermalImplantSystem
         if (TryComp<HumanoidAppearanceComponent>(ent, out var humanoid))
         {
             var newProfile = HumanoidCharacterProfile.RandomWithSpecies(humanoid.Species);
-            _humanoidAppearance.LoadProfile(ent, newProfile, humanoid);
+            _humanoidAppearance.LoadProfile((ent, humanoid), newProfile);
             _metaData.SetEntityName(ent, newProfile.Name);
             if (TryComp<DnaComponent>(ent, out var dna))
             {

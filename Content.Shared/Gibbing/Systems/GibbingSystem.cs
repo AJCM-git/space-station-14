@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Content.Shared.CCVar;
 using Content.Shared.Gibbing.Components;
 using Content.Shared.Gibbing.Events;
@@ -42,17 +43,18 @@ public sealed class GibbingSystem : EntitySystem
 
         _cleanupTime = _timing.CurTime + TimeSpan.FromSeconds(CleanupCooldown);
 
-        // TODO BODY Change with a query
-        List<EntityUid> GibletsEntities = new();
-        var gibletsCount = GibletsEntities.Count;
+        // TODO BODY make this a generic component, like "AutoCleanComponent"
+        var gibletsEntities = EntityQuery<GibletComponent>().ToList();
+        var gibletsCount = gibletsEntities.Count;
         var excess = gibletsCount - _maxGiblets;
         if (excess < 1)
             return;
 
         for (var i = 0; i < excess; i++)
         {
-            var toDelete = GibletsEntities[gibletsCount - excess + i];
-            Del(toDelete);
+            var toDelete = gibletsEntities[gibletsCount - excess + i];
+            // TODO BODY
+            Del(toDelete.Owner);
         }
     }
 
@@ -63,17 +65,17 @@ public sealed class GibbingSystem : EntitySystem
     /// <param name="outerEntity">The outermost entity we care about, used to place the dropped items</param>
     /// <param name="gibbable">Target entity/comp we wish to gib</param>
     /// <param name="droppedEntities">a hashset containing all the entities that have been dropped/created</param>
-    /// <param name="allowedContainers">A list of containerIds on the target that permit gibing</param>
-    /// <param name="excludedContainers">A list of containerIds on the target that DO NOT permit gibing</param>
+    /// <param name="selectedContainers">A list of containerIds on the target that permit gibing</param>
+    /// <param name="denyContainers">Whether to see the selectedContainers as a list to allow or to deny</param>
     /// <param name="logMissingGibbable">Should we log if we are missing a gibbableComp when we call this function</param>
     /// <remarks>Handles entities with the component</remarks>
     /// <returns>True if successful, false if not</returns>
     public bool TryGibEntity(EntityUid outerEntity, Entity<GibbableComponent> gibbable, out HashSet<EntityUid> droppedEntities,
-         List<string>? allowedContainers = null, List<string>? excludedContainers = null, bool logMissingGibbable = false)
+         List<string>? selectedContainers = null, bool denyContainers = false, bool logMissingGibbable = false)
     {
         return TryGibEntity(outerEntity, (gibbable.Owner, gibbable.Comp), gibbable.Comp.GibType, gibbable.Comp.GibContentsOption, out droppedEntities,
             gibbable.Comp.LaunchOptions, gibbable.Comp.RandomSpreadMod, gibbable.Comp.GibSound != null,
-            allowedContainers, excludedContainers, logMissingGibbable);
+            selectedContainers, false, logMissingGibbable);
     }
 
     /// <inheritdoc cref="TryGibEntity(Robust.Shared.GameObjects.EntityUid,Robust.Shared.GameObjects.Entity{Content.Shared.Gibbing.Components.GibbableComponent},out System.Collections.Generic.HashSet{Robust.Shared.GameObjects.EntityUid},System.Collections.Generic.List{string}?,System.Collections.Generic.List{string}?,bool)"/>
@@ -85,11 +87,11 @@ public sealed class GibbingSystem : EntitySystem
     /// <remarks>Handles entities without the component</remarks>
     public bool TryGibEntity(EntityUid outerEntity, Entity<GibbableComponent?> gibbable, GibType gibType, GibContentsOption gibContentsOption,
         out HashSet<EntityUid> droppedEntities, GibLaunchOptions launchOptions, float randomSpreadMod = 1.0f, bool playAudio = true,
-        List<string>? allowedContainers = null, List<string>? excludedContainers = null, bool logMissingGibbable = false)
+        List<string>? selectedContainers = null, bool denyContainers = false, bool logMissingGibbable = false)
     {
         droppedEntities = new();
         return TryGibEntityWithRef(outerEntity, (gibbable.Owner, gibbable.Comp), gibType, gibContentsOption, ref droppedEntities,
-            launchOptions, randomSpreadMod, playAudio, allowedContainers, excludedContainers, logMissingGibbable);
+            launchOptions, randomSpreadMod, playAudio, selectedContainers, false, logMissingGibbable);
     }
 
     /// <inheritdoc cref="TryGibEntity(Robust.Shared.GameObjects.EntityUid,Robust.Shared.GameObjects.Entity{Content.Shared.Gibbing.Components.GibbableComponent},Content.Shared.Gibbing.Events.GibType,Content.Shared.Gibbing.Events.GibContentsOption,out System.Collections.Generic.HashSet{Robust.Shared.GameObjects.EntityUid},Content.Shared.Gibbing.Events.GibLaunchOptions,Robust.Shared.Maths.Angle,float,bool,System.Collections.Generic.List{string}?,System.Collections.Generic.List{string}?,bool)"/>
@@ -102,8 +104,8 @@ public sealed class GibbingSystem : EntitySystem
         GibLaunchOptions launchOptions,
         float randomSpreadMod = 1.0f,
         bool playAudio = true,
-        List<string>? allowedContainers = null,
-        List<string>? excludedContainers = null,
+        List<string>? selectedContainers = null,
+        bool denyContainers = false,
         bool logMissingGibbable = false)
     {
         //TODO: Placeholder for testing! Replace with proper bodypart gibbing implementation!
@@ -128,16 +130,14 @@ public sealed class GibbingSystem : EntitySystem
 
         HashSet<BaseContainer> validContainers = new();
         var gibContentsAttempt =
-            new AttemptEntityContentsGibEvent(gibbable, gibContentsOption, allowedContainers, excludedContainers);
+            new AttemptEntityContentsGibEvent(gibbable, gibContentsOption, selectedContainers, false);
         RaiseLocalEvent(gibbable, ref gibContentsAttempt);
 
         foreach (var container in _containerSystem.GetAllContainers(gibbable))
         {
-            var valid = true;
-            if (allowedContainers != null)
-                valid = allowedContainers.Contains(container.ID);
-            if (excludedContainers != null)
-                valid = valid && !excludedContainers.Contains(container.ID);
+            var valid = !denyContainers;
+            if (selectedContainers != null && !denyContainers)
+                valid = selectedContainers.Contains(container.ID);
             if (valid)
                 validContainers.Add(container);
         }
@@ -175,7 +175,7 @@ public sealed class GibbingSystem : EntitySystem
             case GibContentsOption.Gib:
                 foreach (var container in validContainers)
                 {
-                    foreach (var ent in container.ContainedEntities)
+                    foreach (var ent in container.ContainedEntities.ToArray())
                     {
                         GibEntity((ent, null), parentXform, randomSpreadMod, ref droppedEntities, launchOptions);
                     }
@@ -185,9 +185,6 @@ public sealed class GibbingSystem : EntitySystem
 
         if (playAudio)
             _audioSystem.PlayPredicted(gibbable.Comp.GibSound, parentXform.Coordinates, null);
-
-        if (gibType == GibType.Gib)
-            QueueDel(gibbable);
 
         return true;
     }
@@ -211,6 +208,7 @@ public sealed class GibbingSystem : EntitySystem
                 return;
         }
 
+        // PlaceNextTo
         _transformSystem.AttachToGridOrMap(gibbable);
         _transformSystem.SetCoordinates(gibbable, parentXform.Coordinates);
         _transformSystem.SetWorldRotation(gibbable, _random.NextAngle());
@@ -219,7 +217,7 @@ public sealed class GibbingSystem : EntitySystem
         if (launchOptions.Launch)
             FlingDroppedEntity(gibbable, launchOptions);
 
-        var gibbedEvent = new EntityGibbedEvent(gibbable, [gibbable]);
+        var gibbedEvent = new EntityGibbedEvent(gibbable, new List<EntityUid> {gibbable});
         RaiseLocalEvent(gibbable, ref gibbedEvent);
     }
 

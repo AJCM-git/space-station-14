@@ -2,6 +2,4 @@
 
 namespace Content.Client.Body.Systems;
 
-public sealed class BodySystem : SharedBodySystem
-{
-}
+public sealed class BodySystem : SharedBodySystem;

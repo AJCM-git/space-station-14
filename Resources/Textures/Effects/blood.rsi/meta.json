@@ -1,0 +1,318 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "https://github.com/tgstation/tgstation/blob/6e57b94657575b151faae472ae7d80fc82bdb040/icons/effects/blood.dmi",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "itemblood"
+    },
+    {
+      "name": "handblood"
+    },
+    {
+      "name": "uniformblood",
+      "directions": 4
+    },
+    {
+      "name": "armorblood",
+      "directions": 4
+    },
+    {
+      "name": "helmetblood",
+      "directions": 4
+    },
+    {
+      "name": "suitblood",
+      "directions": 4
+    },
+    {
+      "name": "maskblood",
+      "directions": 4
+    },
+    {
+      "name": "shoeblood",
+      "directions": 4
+    },
+    {
+      "name": "coatblood",
+      "directions": 4
+    },
+    {
+      "name": "gloveblood",
+      "directions": 4
+    },
+    {
+      "name": "gibarm",
+      "directions": 4
+    },
+    {
+      "name": "gibmid2"
+    },
+    {
+      "name": "gibhead",
+      "directions": 4
+    },
+    {
+      "name": "gibleg",
+      "directions": 4
+    },
+    {
+      "name": "gibtorso",
+      "directions": 4
+    },
+    {
+      "name": "gibmid1"
+    },
+    {
+      "name": "gib1"
+    },
+    {
+      "name": "gib2"
+    },
+    {
+      "name": "gib3",
+      "directions": 4
+    },
+    {
+      "name": "gib4",
+      "directions": 4
+    },
+    {
+      "name": "gib5",
+      "directions": 4
+    },
+    {
+      "name": "gib6",
+      "directions": 4
+    },
+    {
+      "name": "gibup1"
+    },
+    {
+      "name": "gibdown1"
+    },
+    {
+      "name": "gibmid3"
+    },
+    {
+      "name": "tracks",
+      "directions": 8
+    },
+    {
+      "name": "gib1-old"
+    },
+    {
+      "name": "gib2-old"
+    },
+    {
+      "name": "gib3-old",
+      "directions": 4
+    },
+    {
+      "name": "gib4-old",
+      "directions": 4
+    },
+    {
+      "name": "gib5-old",
+      "directions": 4
+    },
+    {
+      "name": "gib6-old",
+      "directions": 4
+    },
+    {
+      "name": "ltrails_1",
+      "directions": 8
+    },
+    {
+      "name": "trails_1",
+      "directions": 8
+    },
+    {
+      "name": "trails_2",
+      "directions": 8
+    },
+    {
+      "name": "ltrails_2",
+      "directions": 8
+    },
+    {
+      "name": "hitsplatter1",
+      "directions": 4,
+      "delays": [
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ]
+      ]
+    },
+    {
+      "name": "hitsplatter2",
+      "directions": 4,
+      "delays": [
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ]
+      ]
+    },
+    {
+      "name": "hitsplatter3",
+      "directions": 4,
+      "delays": [
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1,
+          0.1
+        ]
+      ]
+    }
+  ]
+}

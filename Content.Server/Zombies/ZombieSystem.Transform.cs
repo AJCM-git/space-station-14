@@ -3,7 +3,7 @@ using Content.Server.Body.Components;
 using Content.Server.Chat;
 using Content.Server.Chat.Managers;
 using Content.Server.Ghost.Roles.Components;
-using Content.Server.Humanoid;
+using Content.Server.Humanoid.Systems;
 using Content.Server.IdentityManagement;
 using Content.Server.Inventory;
 using Content.Server.Mind;
@@ -154,16 +154,16 @@ namespace Content.Server.Zombies
                 //if (TryComp<BloodstreamComponent>(target, out var stream))
                     //zombiecomp.BeforeZombifiedBloodReagent = stream.BloodReagent;
 
-                _humanoidAppearance.SetSkinColor(target, zombiecomp.SkinColor, verify: false, humanoid: huApComp);
+                _humanoidAppearance.SetSkinColor((target, huApComp), zombiecomp.SkinColor, verify: false);
 
                 // Messing with the eye layer made it vanish upon cloning, and also it didn't even appear right
                 huApComp.EyeColor = zombiecomp.EyeColor;
 
                 // this might not resync on clone?
-                _humanoidAppearance.SetBaseLayerId(target, HumanoidVisualLayers.Tail, zombiecomp.BaseLayerExternal, humanoid: huApComp);
-                _humanoidAppearance.SetBaseLayerId(target, HumanoidVisualLayers.HeadSide, zombiecomp.BaseLayerExternal, humanoid: huApComp);
-                _humanoidAppearance.SetBaseLayerId(target, HumanoidVisualLayers.HeadTop, zombiecomp.BaseLayerExternal, humanoid: huApComp);
-                _humanoidAppearance.SetBaseLayerId(target, HumanoidVisualLayers.Snout, zombiecomp.BaseLayerExternal, humanoid: huApComp);
+                _humanoidAppearance.SetBaseLayerId((target, huApComp), HumanoidVisualLayers.Tail, zombiecomp.BaseLayerExternal);
+                _humanoidAppearance.SetBaseLayerId((target, huApComp), HumanoidVisualLayers.HeadSide, zombiecomp.BaseLayerExternal);
+                _humanoidAppearance.SetBaseLayerId((target, huApComp), HumanoidVisualLayers.HeadTop, zombiecomp.BaseLayerExternal);
+                _humanoidAppearance.SetBaseLayerId((target, huApComp), HumanoidVisualLayers.Snout, zombiecomp.BaseLayerExternal);
 
                 //This is done here because non-humanoids shouldn't get baller damage
                 //lord forgive me for the hardcoded damage

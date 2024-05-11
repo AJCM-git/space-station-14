@@ -10,13 +10,13 @@ namespace Content.Shared.Gibbing.Events;
 /// </summary>
 /// <param name="Target">The entity being gibed</param>
 /// <param name="GibType">What type of gibbing is occuring</param>
-/// <param name="AllowedContainers">Containers we are allow to gib</param>
-/// <param name="ExcludedContainers">Containers we are allow not allowed to gib</param>
+/// <param name="SelectedContainers">Containers we are allow to gib</param>
+/// <param name="DenyContainers">Whether to see the selectedContainers as a list to allow or to deny</param>
 [ByRefEvent] public record struct AttemptEntityContentsGibEvent(
     EntityUid Target,
     GibContentsOption GibType,
-    List<string>? AllowedContainers,
-    List<string>? ExcludedContainers
+    List<string>? SelectedContainers,
+    bool DenyContainers
     );
 
 
@@ -40,6 +40,7 @@ public enum GibType : byte
 {
     Skip,
     Drop,
+    Detach,
     Gib,
 }
 
@@ -47,6 +48,7 @@ public enum GibContentsOption : byte
 {
     Skip,
     Drop,
+    Detach,
     Gib
 }
 
@@ -55,4 +57,5 @@ public enum GibContentsOption : byte
 /// <param name="Impulse">The impulse to launch giblets at</param>
 /// <param name="ImpulseVariance">The variation in giblet launch impulse </param>
 /// <param name="ScatterCone">The cone we are launching giblets in</param>
-public record struct GibLaunchOptions(bool Launch = true, Vector2? Direction = null, float Impulse = 0f, float ImpulseVariance = 0f, Angle ScatterCone = default);
+[DataRecord, Serializable, NetSerializable]
+public partial record struct GibLaunchOptions(bool Launch = true, Vector2? Direction = null, float Impulse = 0f, float ImpulseVariance = 0f, Angle ScatterCone = default);

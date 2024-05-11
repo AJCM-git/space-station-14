@@ -1,5 +1,4 @@
 using Content.Shared.Humanoid.Prototypes;
-using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 
 namespace Content.Server.Humanoid.Components;

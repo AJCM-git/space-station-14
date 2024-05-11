@@ -1,0 +1,37 @@
+﻿- type: entity
+  id: BaseGibs
+  abstract: true
+  components:
+  - type: Sprite
+    sprite: Mobs/gibs.rsi
+    noRot: true
+    drawdepth: Mobs
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeCircle
+          radius: 0.20
+        density: 50
+        mask:
+        - MobMask
+        layer:
+        - MobLayer
+  - type: Giblet
+  - type: Appearance
+  - type: Polymorphable
+  - type: InteractionOutline
+
+- type: entity
+  parent: [BaseGibs, BaseItem]
+  id: BaseGibsSmall
+  components:
+  - type: Sprite
+    state: "small"
+
+- type: entity
+  parent: [BaseGibs, BaseStructure]
+  id: BaseGibsBig
+  components:
+  - type: Sprite
+    state: "big"

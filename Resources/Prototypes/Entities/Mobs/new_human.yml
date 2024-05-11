@@ -1,0 +1,238 @@
+- type: entity
+  parent:
+    - BaseMob
+    - MobBloodstream
+    - MobRespirator
+  id: NewBaseMobSpeciesHuman
+  components:
+    - type: Sprite
+      layers:
+        - shader: StencilClear
+          sprite: Mobs/Species/Human/parts.rsi #PJB on stencil clear being on the left leg: "...this is 'fine'" -https://gith#ub.com/space-wizards/space-station-14/pull/12217#issuecomment-1291677#115
+         # its fine, but its still very stupid that it has to be d#one like this instead of allowing sprites to just directly insert a stencil clear.
+         # sprite refactor w#hen
+          state: l_leg
+        - shader: #StencilMask
+          map: ["enum.HumanoidVisualLayers.StencilMask"]
+          sprite#: Mobs/Customization/masking_helpers.rsi
+          state#: unisex_full
+          visi#ble: false
+        - map: ["jumpsuit"]
+        - map: [ "gloves" ]
+        - map: [ "shoes" ]
+        - map: [ "ears" ]
+        - map: [ "outerClothing" ]
+        - map: [ "eyes" ]
+        - map: [ "belt" ]
+        - map: [ "id" ]
+        - map: [ "neck" ]
+        - map: [ "back" ]
+        - map: [ "mask" ]
+        - map: [ "head" ]
+        - map: [ "pocket1" ]
+        - map: [ "pocket2" ]
+        - map: ["enum.HumanoidVisualLayers.Handcuffs"]
+          color: "#ffffff"
+          sprite: Objects/Misc/handcuffs.rsi
+          state: body-overlay-2
+          visible: false
+        - map: [ "clownedon" ] # Dynamically generated
+          sprite: "Effects/creampie.rsi"
+          state: "creampie_human"
+          visible: false
+    - type: Body
+      prototype: NewHuman
+      requiredLegs: 2
+    - type: Icon
+      sprite: Mobs/Species/Human/parts.rsi
+      state: full
+    - type: HumanoidAppearance
+      species: Human
+      hideLayersOnEquip:
+        - Hair
+        - Snout
+  #  - type: DamageVisuals
+  #    thresholds: [ 10, 20, 30, 50, 70, 100 ]
+  #    targetLayers:
+  #      - "enum.HumanoidVisualLayers.Chest"
+  #      - "enum.HumanoidVisualLayers.Head"
+  #      - "enum.HumanoidVisualLayers.LArm"
+  #      - "enum.HumanoidVisualLayers.LLeg"
+  #      - "enum.HumanoidVisualLayers.RArm"
+  #      - "enum.HumanoidVisualLayers.RLeg"
+  #    damageOverlayGroups:
+  #      Brute:
+  #        sprite: Mobs/Effects/brute_damage.rsi
+  #        color: "#FF0000"
+  #      Burn:
+  #        sprite: Mobs/Effects/burn_damage.rsi
+  #  - type: FireVisuals
+  #    alternateState: Standing
+
+- type: entity
+  id: NewPartHuman
+  parent: [BaseItem, BasePart]
+  name: "human body part"
+  abstract: true
+  components:
+    - type: Extractable
+      juiceSolution:
+        reagents:
+          - ReagentId: Fat
+            Quantity: 3
+          - ReagentId: Blood
+            Quantity: 10
+
+- type: entity
+  id: NewTorsoHuman
+  name: "human torso"
+  parent: [NewPartHuman, BaseTorso]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "torso_m"
+    - type: Extractable
+      juiceSolution:
+        reagents:
+          - ReagentId: Fat
+            Quantity: 10
+          - ReagentId: Blood
+            Quantity: 20
+
+- type: entity
+  id: NewHeadHuman
+  name: "human head"
+  parent: [NewPartHuman, BaseHead]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "head_m"
+    - type: Extractable
+      juiceSolution:
+        reagents:
+          - ReagentId: Fat
+            Quantity: 5
+          - ReagentId: Blood
+            Quantity: 10
+
+- type: entity
+  id: NewLeftArmHuman
+  name: "left human arm"
+  parent: [NewPartHuman, BaseLeftArm]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "l_arm"
+
+- type: entity
+  id: NewRightArmHuman
+  name: "right human arm"
+  parent: [NewPartHuman, BaseRightArm]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "r_arm"
+
+- type: entity
+  id: NewLeftHandHuman
+  name: "left human hand"
+  parent: [NewPartHuman, BaseLeftHand]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "l_hand"
+
+- type: entity
+  id: NewRightHandHuman
+  name: "right human hand"
+  parent: [NewPartHuman, BaseRightHand]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "r_hand"
+
+- type: entity
+  id: NewLeftLegHuman
+  name: "left human leg"
+  parent: [NewPartHuman, BaseLeftLeg]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "l_leg"
+
+- type: entity
+  id: NewRightLegHuman
+  name: "right human leg"
+  parent: [NewPartHuman, BaseRightLeg]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "r_leg"
+
+- type: entity
+  id: NewLeftFootHuman
+  name: "left human foot"
+  parent: [NewPartHuman, BaseLeftFoot]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "l_foot"
+
+- type: entity
+  id: NewRightFootHuman
+  name: "right human foot"
+  parent: [NewPartHuman, BaseRightFoot]
+  components:
+    - type: Sprite
+      sprite: Mobs/Species/Human/parts.rsi
+      state: "r_foot"
+
+- type: body
+  id: NewHuman
+  name: "human"
+  root: torso
+  slots:
+    head:
+      part: NewHeadHuman
+      connections:
+        - torso
+      organs:
+        brain: OrganHumanBrain
+        eyes: OrganHumanEyes
+    torso:
+      part: NewTorsoHuman
+      connections:
+        - right_arm
+        - left_arm
+        - right_leg
+        - left_leg
+      organs:
+        heart: OrganHumanHeart
+        lungs: OrganHumanLungs
+        stomach: OrganHumanStomach
+        liver: OrganHumanLiver
+        kidneys: OrganHumanKidneys
+    right_arm:
+      part: NewRightArmHuman
+      connections:
+        - right_hand
+    left_arm:
+      part: NewLeftArmHuman
+      connections:
+        - left_hand
+    right_hand:
+      part: NewRightHandHuman
+    left_hand:
+      part: NewLeftHandHuman
+    right_leg:
+      part: NewRightLegHuman
+      connections:
+        - right_foot
+    left_leg:
+      part: NewLeftLegHuman
+      connections:
+        - left_foot
+    right_foot:
+      part: NewRightFootHuman
+    left_foot:
+      part: NewLeftFootHuman

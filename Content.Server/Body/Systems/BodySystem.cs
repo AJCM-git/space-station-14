@@ -1,10 +1,7 @@
 using Content.Server.Body.Components;
 using Content.Server.GameTicking;
-using Content.Server.Humanoid;
 using Content.Shared.Body.Components;
-using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
-using Content.Shared.Humanoid;
 using Content.Shared.Mind;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Movement.Events;
@@ -19,7 +16,6 @@ public sealed class BodySystem : SharedBodySystem
 {
     [Dependency] private readonly GameTicker _ticker = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
-    [Dependency] private readonly HumanoidAppearanceSystem _humanoidSystem = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly SharedMindSystem _mindSystem = default!;
 
@@ -56,46 +52,6 @@ public sealed class BodySystem : SharedBodySystem
     //         RaiseLocalEvent(organ.Id, ref args);
     //     }
     // }
-
-    protected override void AddPart(
-        Entity<BodyComponent?> bodyEnt,
-        Entity<BodyPartComponent> partEnt,
-        string slotId)
-    {
-        // TODO: Predict this probably.
-        base.AddPart(bodyEnt, partEnt, slotId);
-
-        if (TryComp<HumanoidAppearanceComponent>(bodyEnt, out var humanoid))
-        {
-            var layer = partEnt.Comp.ToHumanoidLayers();
-            if (layer != null)
-            {
-                var layers = HumanoidVisualLayersExtension.Sublayers(layer.Value);
-                _humanoidSystem.SetLayersVisibility(
-                    bodyEnt, layers, visible: true, permanent: true, humanoid);
-            }
-        }
-    }
-
-    protected override void RemovePart(
-        Entity<BodyComponent?> bodyEnt,
-        Entity<BodyPartComponent> partEnt,
-        string slotId)
-    {
-        base.RemovePart(bodyEnt, partEnt, slotId);
-
-        if (!TryComp<HumanoidAppearanceComponent>(bodyEnt, out var humanoid))
-            return;
-
-        var layer = partEnt.Comp.ToHumanoidLayers();
-
-        if (layer is null)
-            return;
-
-        var layers = HumanoidVisualLayersExtension.Sublayers(layer.Value);
-        _humanoidSystem.SetLayersVisibility(
-            bodyEnt, layers, visible: false, permanent: true, humanoid);
-    }
 
     public override HashSet<EntityUid> GibBody(
         EntityUid bodyId,

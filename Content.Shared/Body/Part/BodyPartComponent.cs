@@ -1,6 +1,7 @@
 ﻿using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
 using Content.Shared.FixedPoint;
+using Content.Shared.Humanoid;
 using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;

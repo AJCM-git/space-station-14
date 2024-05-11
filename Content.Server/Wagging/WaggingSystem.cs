@@ -1,5 +1,5 @@
 ﻿using Content.Server.Actions;
-using Content.Server.Humanoid;
+using Content.Server.Humanoid.Systems;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Mobs;
@@ -93,8 +93,7 @@ public sealed class WaggingSystem : EntitySystem
                 continue;
             }
 
-            _humanoidAppearance.SetMarkingId(uid, MarkingCategories.Tail, idx, newMarkingId,
-                humanoid: humanoid);
+            _humanoidAppearance.SetMarkingId((uid, humanoid), MarkingCategories.Tail, idx, newMarkingId);
         }
 
         return true;

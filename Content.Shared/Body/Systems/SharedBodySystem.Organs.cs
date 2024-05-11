@@ -53,7 +53,7 @@ public partial class SharedBodySystem
         if (!Resolve(parentEnt, ref parentEnt.Comp, logMissing: false))
             return null;
 
-        Containers.EnsureContainer<ContainerSlot>(parentEnt, GetOrganContainerId(slotId));
+        _containers.EnsureContainer<ContainerSlot>(parentEnt, GetOrganContainerId(slotId));
         var slot = new OrganSlot(slotId);
         parentEnt.Comp.Organs.Add(slotId, slot);
         return slot;
@@ -75,7 +75,7 @@ public partial class SharedBodySystem
             return false;
         }
 
-        Containers.EnsureContainer<ContainerSlot>(parent.Value, GetOrganContainerId(slotId));
+        _containers.EnsureContainer<ContainerSlot>(parent.Value, GetOrganContainerId(slotId));
         slot = new OrganSlot(slotId);
         return part.Organs.TryAdd(slotId, slot.Value);
     }
@@ -118,8 +118,8 @@ public partial class SharedBodySystem
 
         var containerId = GetOrganContainerId(slotId);
 
-        return Containers.TryGetContainer(partId, containerId, out var container)
-            && Containers.Insert(organId, container);
+        return _containers.TryGetContainer(partId, containerId, out var container)
+            && _containers.Insert(organId, container);
     }
 
     /// <summary>
@@ -127,13 +127,13 @@ public partial class SharedBodySystem
     /// </summary>
     public bool RemoveOrgan(EntityUid organId, OrganComponent? organ = null)
     {
-        if (!Containers.TryGetContainingContainer(organId, out var container))
+        if (!_containers.TryGetContainingContainer(organId, out var container))
             return false;
 
         var parent = container.Owner;
 
         return HasComp<BodyPartComponent>(parent)
-            && Containers.Remove(organId, container);
+            && _containers.Remove(organId, container);
     }
 
     /// <summary>

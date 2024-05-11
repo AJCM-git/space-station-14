@@ -368,7 +368,7 @@ namespace Content.Shared.CCVar
         /// Maximum amount of giblets allowed in the server before deletion, 0 means we won't limit the amount of giblets.
         /// </summary>
         public static readonly CVarDef<int> MaxGiblets =
-            CVarDef.Create("game.max_giblets", 0, CVar.SERVERONLY);
+            CVarDef.Create("game.max_giblets", 0, CVar.REPLICATED);
 
         /*
          * Discord

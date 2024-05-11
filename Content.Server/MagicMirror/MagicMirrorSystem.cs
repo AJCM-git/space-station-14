@@ -1,6 +1,6 @@
 using System.Linq;
 using Content.Server.DoAfter;
-using Content.Server.Humanoid;
+using Content.Server.Humanoid.Systems;
 using Content.Shared.UserInterface;
 using Content.Shared.DoAfter;
 using Content.Shared.Humanoid;

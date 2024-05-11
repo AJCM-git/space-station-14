@@ -6,24 +6,20 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Utility;
 
-namespace Content.Server.Humanoid;
+namespace Content.Server.Humanoid.Systems;
 
 public sealed partial class HumanoidAppearanceSystem
 {
     [Dependency] private readonly IAdminManager _adminManager = default!;
     [Dependency] private readonly UserInterfaceSystem _uiSystem = default!;
 
-    private void OnVerbsRequest(EntityUid uid, HumanoidAppearanceComponent component, GetVerbsEvent<Verb> args)
+    private void OnVerbsRequest(Entity<HumanoidAppearanceComponent> ent, ref GetVerbsEvent<Verb> args)
     {
         if (!TryComp<ActorComponent>(args.User, out var actor))
-        {
             return;
-        }
 
         if (!_adminManager.HasAdminFlag(actor.PlayerSession, AdminFlags.Fun))
-        {
             return;
-        }
 
         args.Verbs.Add(new Verb
         {
@@ -32,71 +28,61 @@ public sealed partial class HumanoidAppearanceSystem
             Icon = new SpriteSpecifier.Rsi(new("/Textures/Mobs/Customization/reptilian_parts.rsi"), "tail_smooth"),
             Act = () =>
             {
-                _uiSystem.OpenUi(uid, HumanoidMarkingModifierKey.Key, actor.PlayerSession);
+                _uiSystem.OpenUi(ent.Owner, HumanoidMarkingModifierKey.Key, actor.PlayerSession);
                 _uiSystem.SetUiState(
-                    uid,
+                    ent.Owner,
                     HumanoidMarkingModifierKey.Key,
-                    new HumanoidMarkingModifierState(component.MarkingSet, component.Species,
-                        component.Sex,
-                        component.SkinColor,
-                        component.CustomBaseLayers
+                    new HumanoidMarkingModifierState(ent.Comp.MarkingSet, ent.Comp.Species,
+                        ent.Comp.Sex,
+                        ent.Comp.SkinColor,
+                        ent.Comp.CustomBaseLayers
                     ));
             }
         });
     }
 
-    private void OnBaseLayersSet(EntityUid uid, HumanoidAppearanceComponent component,
-        HumanoidMarkingModifierBaseLayersSetMessage message)
+    private void OnBaseLayersSet(Entity<HumanoidAppearanceComponent> ent, ref HumanoidMarkingModifierBaseLayersSetMessage message)
     {
         if (!_adminManager.HasAdminFlag(message.Actor, AdminFlags.Fun))
-        {
             return;
-        }
 
         if (message.Info == null)
-        {
-            component.CustomBaseLayers.Remove(message.Layer);
-        }
+            ent.Comp.CustomBaseLayers.Remove(message.Layer);
         else
-        {
-            component.CustomBaseLayers[message.Layer] = message.Info.Value;
-        }
+            ent.Comp.CustomBaseLayers[message.Layer] = message.Info.Value;
 
-        Dirty(uid, component);
+        Dirty(ent);
 
         if (message.ResendState)
         {
             _uiSystem.SetUiState(
-                uid,
+                ent.Owner,
                 HumanoidMarkingModifierKey.Key,
-                new HumanoidMarkingModifierState(component.MarkingSet, component.Species,
-                        component.Sex,
-                        component.SkinColor,
-                        component.CustomBaseLayers
+                new HumanoidMarkingModifierState(ent.Comp.MarkingSet, ent.Comp.Species,
+                        ent.Comp.Sex,
+                        ent.Comp.SkinColor,
+                        ent.Comp.CustomBaseLayers
                     ));
         }
     }
 
-    private void OnMarkingsSet(EntityUid uid, HumanoidAppearanceComponent component,
-        HumanoidMarkingModifierMarkingSetMessage message)
+    private void OnMarkingsSet(Entity<HumanoidAppearanceComponent> ent, ref HumanoidMarkingModifierMarkingSetMessage message)
     {
         if (!_adminManager.HasAdminFlag(message.Actor, AdminFlags.Fun))
-        {
             return;
-        }
 
-        component.MarkingSet = message.MarkingSet;
-        Dirty(uid, component);
+        ent.Comp.MarkingSet = message.MarkingSet;
+        Dirty(ent);
 
         if (message.ResendState)
         {
             _uiSystem.SetUiState(
-                uid,
+                ent.Owner,
                 HumanoidMarkingModifierKey.Key,
-                new HumanoidMarkingModifierState(component.MarkingSet, component.Species,
-                        component.Sex,
-                        component.SkinColor,
-                        component.CustomBaseLayers
+                new HumanoidMarkingModifierState(ent.Comp.MarkingSet, ent.Comp.Species,
+                        ent.Comp.Sex,
+                        ent.Comp.SkinColor,
+                        ent.Comp.CustomBaseLayers
                     ));
         }
 

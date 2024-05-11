@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Content.Server.Humanoid.Components;
 using Content.Shared.Coordinates;
 using Content.Shared.Prototypes;
 using Robust.Shared;

@@ -36,20 +36,24 @@ public sealed partial class GibbableComponent : Component
     /// <summary>
     /// How much to multiply the random spread on dropped giblets(if we are dropping them!)
     /// </summary>
+    [DataField, AutoNetworkedField]
     public float RandomSpreadMod = 1.0f;
 
     /// <summary>
     /// What type of gibing are we performing
     /// </summary>
+    [DataField, AutoNetworkedField]
     public GibType GibType;
 
     /// <summary>
     /// What type of gibing do we perform on any container contents?
     /// </summary>
+    [DataField, AutoNetworkedField]
     public GibContentsOption GibContentsOption;
 
     /// <summary>
     /// Dictates if we should launch the gibs, how much impulse to we apply to them, etc
     /// </summary>
+    [DataField, AutoNetworkedField]
     public GibLaunchOptions LaunchOptions;
 }

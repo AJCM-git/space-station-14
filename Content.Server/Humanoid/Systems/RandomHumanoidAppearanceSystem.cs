@@ -20,13 +20,11 @@ public sealed class RandomHumanoidAppearanceSystem : EntitySystem
     {
         // If we have an initial profile/base layer set, do not randomize this humanoid.
         if (!TryComp(uid, out HumanoidAppearanceComponent? humanoid) || !string.IsNullOrEmpty(humanoid.Initial))
-        {
             return;
-        }
 
         var profile = HumanoidCharacterProfile.RandomWithSpecies(humanoid.Species);
 
-        _humanoid.LoadProfile(uid, profile, humanoid);
+        _humanoid.LoadProfile((uid, humanoid), profile);
 
         if (component.RandomizeName)
             _metaData.SetEntityName(uid, profile.Name);
