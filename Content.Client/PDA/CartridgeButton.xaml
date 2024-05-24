@@ -1,0 +1,8 @@
+﻿<pda:CartridgeButton
+    xmlns:pda="clr-namespace:Content.Client.PDA"
+    xmlns="https://spacestation14.io"
+    HorizontalExpand="True"
+    MinHeight="60"
+    Margin="4">
+    <PanelContainer Name="Panel"/>
+</pda:CartridgeButton>

@@ -117,10 +117,11 @@
     laws: Crewsimov
 
 - type: entity
-  id: BaseStationNews
+  id: BaseStationApplications
   abstract: true
   components:
     - type: StationNews
+    - type: StationMessenger
 
 - type: entity
   id: BaseStationAllEventsEligible

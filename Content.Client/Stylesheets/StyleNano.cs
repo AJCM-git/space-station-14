@@ -1553,14 +1553,14 @@ namespace Content.Client.Stylesheets
                     .Prop(PdaSettingsButton.StylePropertyBgColor, Color.FromHex(PdaSettingsButton.NormalBgColor))
                     .Prop(PdaSettingsButton.StylePropertyFgColor, Color.FromHex(PdaSettingsButton.DisabledFgColor)),
 
-                Element<PdaProgramItem>().Pseudo(ContainerButton.StylePseudoClassNormal)
-                    .Prop(PdaProgramItem.StylePropertyBgColor, Color.FromHex(PdaProgramItem.NormalBgColor)),
+                Element<CartridgeButton>().Pseudo(ContainerButton.StylePseudoClassNormal)
+                    .Prop(CartridgeButton.StylePropertyBgColor, Color.FromHex(CartridgeButton.NormalBgColor)),
 
-                Element<PdaProgramItem>().Pseudo(ContainerButton.StylePseudoClassHover)
-                    .Prop(PdaProgramItem.StylePropertyBgColor, Color.FromHex(PdaProgramItem.HoverColor)),
+                Element<CartridgeButton>().Pseudo(ContainerButton.StylePseudoClassHover)
+                    .Prop(CartridgeButton.StylePropertyBgColor, Color.FromHex(CartridgeButton.HoverColor)),
 
-                Element<PdaProgramItem>().Pseudo(ContainerButton.StylePseudoClassPressed)
-                    .Prop(PdaProgramItem.StylePropertyBgColor, Color.FromHex(PdaProgramItem.HoverColor)),
+                Element<CartridgeButton>().Pseudo(ContainerButton.StylePseudoClassPressed)
+                    .Prop(CartridgeButton.StylePropertyBgColor, Color.FromHex(CartridgeButton.HoverColor)),
 
                 //PDA - Text
                 Element<Label>().Class("PdaContentFooterText")

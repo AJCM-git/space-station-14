@@ -1,0 +1,18 @@
+﻿<pda:CartridgeButton xmlns="https://spacestation14.io"
+                     xmlns:pda="clr-namespace:Content.Client.PDA"
+                     HorizontalExpand="True"
+                     SetHeight="64"
+                     Margin="4">
+    <BoxContainer Orientation="Horizontal" HorizontalExpand="True">
+        <BoxContainer Orientation="Vertical" SetWidth="64" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <AnimatedTextureRect Name="AvatarIcon"
+                         SetSize="32 32"/>
+        </BoxContainer>
+        <BoxContainer Orientation="Vertical" HorizontalExpand="True" Margin="0 10 0 0">
+            <Label Name="UserName" Access="Public"/>
+            <BoxContainer HorizontalExpand="True" VerticalExpand="True" VerticalAlignment="Bottom">
+                <RichTextLabel Name="MessagePreview" Access="Public"/>
+            </BoxContainer>
+        </BoxContainer>
+    </BoxContainer>
+</pda:CartridgeButton>

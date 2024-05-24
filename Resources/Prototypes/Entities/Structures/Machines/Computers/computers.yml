@@ -128,14 +128,6 @@
     color: "#c94242"
   - type: Computer
     board: SyndicateShuttleConsoleCircuitboard
-  - type: MessagesServer
-  - type: SingletonDeviceNetServer
-  - type: DeviceNetwork
-    deviceNetId: Wireless
-    transmitFrequencyId: SyndicateMessagesServer
-    receiveFrequencyId: SyndicateMessagesClient
-    autoConnect: false
-  - type: StationLimitedNetwork
 
 - type: entity
   parent: BaseComputerShuttle
@@ -362,14 +354,6 @@
   - type: GuideHelp
     guides:
     - Forensics
-  - type: MessagesServer
-  - type: SingletonDeviceNetServer
-  - type: DeviceNetwork
-    deviceNetId: Wireless
-    transmitFrequencyId: NTMessagesServer
-    receiveFrequencyId: NTMessagesClient
-    autoConnect: false
-  - type: StationLimitedNetwork
 
 - type: entity
   parent: BaseComputer

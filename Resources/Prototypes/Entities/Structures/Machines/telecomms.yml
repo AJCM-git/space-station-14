@@ -82,7 +82,7 @@
       - EncryptionKeyCommand
 
 - type: entity
-  id: MessagesServer
+  id: MessengerServer
   parent: BaseMachinePowered
   name: PDA messaging server
   description: Server that allows PDA messaging to function on the station.
@@ -123,29 +123,14 @@
     range: 5
     sound:
       path: /Audio/Ambience/Objects/server_fans.ogg
-  - type: MessagesServer
+  - type: MessengerServer
   - type: SingletonDeviceNetServer
   - type: DeviceNetwork
     deviceNetId: Wireless
-    transmitFrequencyId: NTMessagesServer
-    receiveFrequencyId: NTMessagesClient
+    transmitFrequencyId: NTMessengerServer
+    receiveFrequencyId: NTMessengerClient
     autoConnect: false
   - type: StationLimitedNetwork
-
-- type: entity
-  id: SyndicateMessagesServer
-  parent: MessagesServer
-  name: Syndicate PDA messaging server
-  description: Server that allows PDA messaging between Syndicate operatives to function.
-  components:
-  - type: MessagesServer
-  - type: StationLimitedNetwork
-  - type: SingletonDeviceNetServer
-  - type: DeviceNetwork
-    deviceNetId: Wireless
-    transmitFrequencyId: SyndicateMessagesServer
-    receiveFrequencyId: SyndicateMessagesClient
-    autoConnect: false
 
 - type: entity
   parent: TelecomServer
@@ -226,4 +211,3 @@
     containers:
       key_slots:
       - EncryptionKeyCommand
-

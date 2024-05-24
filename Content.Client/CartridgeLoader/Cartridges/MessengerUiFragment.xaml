@@ -1,0 +1,43 @@
+<cartridges:MessengerUiFragment xmlns:cartridges="clr-namespace:Content.Client.CartridgeLoader.Cartridges"
+    xmlns="https://spacestation14.io"
+    xmlns:customControls="clr-namespace:Content.Client.Administration.UI.CustomControls"
+    xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+    Orientation="Vertical"
+    HorizontalExpand="True"
+    VerticalExpand="True">
+    <BoxContainer Name="ContactsContainer" Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True" Margin="10">
+    <RichTextLabel Name="ErrorLabel" Visible="False"/>
+
+        <BoxContainer HorizontalExpand="True" Align="Center">
+            <Label Name="OurUser"/>
+        </BoxContainer>
+        <BoxContainer HorizontalExpand="True" VerticalAlignment="Center">
+            <Label Text="{Loc 'messenger-contacts-label'}"/>
+            <LineEdit Name="SearchBar" PlaceHolder="{Loc 'messenger-searchbar'}" HorizontalExpand="True" MinHeight="20" Margin="10 0 10 0"/>
+        </BoxContainer>
+        <customControls:HSeparator Margin="10" />
+        <RichTextLabel Name="FetchingLabel" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ScrollContainer VerticalExpand="True">
+            <BoxContainer Name="ContactList" Orientation="Vertical" HorizontalExpand="True" Margin="0 0 5 0"/>
+        </ScrollContainer>
+    </BoxContainer>
+
+    <BoxContainer Name="ChatContainer" Visible="False" Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True" Margin="2">
+        <BoxContainer Orientation="Horizontal" VerticalAlignment="Center" HorizontalExpand="True" Margin="5" MinHeight="10">
+            <Button Name="ReturnButton" Text="{Loc 'messenger-return-button'}" HorizontalAlignment="Right"/>
+            <BoxContainer HorizontalExpand="True" HorizontalAlignment="Center">
+                <Label Name="UserName" Margin="0 0 50 0"/>
+            </BoxContainer>
+        </BoxContainer>
+        <PanelContainer VerticalExpand="True">
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#0b0b0b"/>
+            </PanelContainer.PanelOverride>
+
+            <ScrollContainer Name="MessagesScrollbar" VerticalExpand="True">
+                <BoxContainer Name="MessagesContainer" Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True"/>
+            </ScrollContainer>
+        </PanelContainer>
+        <LineEdit Name="MessageInput" MinHeight="32" PlaceHolder="{Loc 'messenger-message-placeholder'}"/>
+    </BoxContainer>
+</cartridges:MessengerUiFragment>

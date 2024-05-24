@@ -1,0 +1,27 @@
+﻿<pda:CartridgeButton xmlns="https://spacestation14.io"
+    xmlns:pda="clr-namespace:Content.Client.PDA"
+    xmlns:customControls="clr-namespace:Content.Client.Administration.UI.CustomControls"
+    HorizontalExpand="True"
+    HorizontalAlignment="Left"
+    MinHeight="60"
+    MinWidth="80"
+    MaxWidth="400"
+    Margin="5">
+    <BoxContainer Orientation="Horizontal" HorizontalExpand="True" VerticalExpand="True">
+        <BoxContainer Name="AvatarIconContainer" Orientation="Horizontal" HorizontalAlignment="Center" VerticalExpand="True" MinWidth="64">
+            <BoxContainer Orientation="Vertical" HorizontalExpand="True" Align="Center" Margin="10">
+                <BoxContainer HorizontalAlignment="Center" VerticalExpand="False" Margin="0 0 0 5">
+                    <AnimatedTextureRect Name="AvatarIcon"
+                                 SetSize="32 32"
+                                 VerticalExpand="True"/>
+                </BoxContainer>
+                <customControls:HSeparator/>
+                <RichTextLabel Name="TimeLabel" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            </BoxContainer>
+            <customControls:VSeparator Name="AvatarMessageSeparator"/>
+        </BoxContainer>
+        <BoxContainer Orientation="Vertical" HorizontalExpand="True" Margin="10">
+            <RichTextLabel Name="Message" VerticalExpand="True" HorizontalExpand="True"/>
+        </BoxContainer>
+    </BoxContainer>
+</pda:CartridgeButton>
