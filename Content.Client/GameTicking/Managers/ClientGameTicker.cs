@@ -105,7 +105,7 @@ namespace Content.Client.GameTicking.Managers
 
         private void JoinLobby(TickerJoinLobbyEvent message)
         {
-            _stateManager.RequestStateChange<LobbyState>();
+            _stateManager.RequestStateChange<PreLobbyState>();
         }
 
         private void ConnectionStatus(TickerConnectionStatusEvent message)

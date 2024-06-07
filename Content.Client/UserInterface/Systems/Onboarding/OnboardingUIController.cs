@@ -5,6 +5,7 @@ using Content.Shared.CCVar;
 using Content.Shared.Onboarding;
 using JetBrains.Annotations;
 using Robust.Client;
+using Robust.Client.State;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
@@ -19,6 +20,7 @@ public sealed class OnboardingUIController : UIController
     [Dependency] private readonly IBaseClient _client = default!;
     [Dependency] private readonly IConfigurationManager _cfg = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
+    [Dependency] private readonly IStateManager _state = default!;
 
     private FancyWindow? _levelSelectorWindow;
 
@@ -27,6 +29,12 @@ public sealed class OnboardingUIController : UIController
         base.Initialize();
 
         _client.PlayerJoinedServer += OnJoinedServer;
+        _state.OnStateChanged += OnStateChanged;
+    }
+
+    private void OnStateChanged(StateChangedEventArgs obj)
+    {
+        throw new NotImplementedException();
     }
 
     private void OnJoinedServer(object? sender, PlayerEventArgs e)
