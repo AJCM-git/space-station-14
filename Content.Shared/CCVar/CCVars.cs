@@ -1776,6 +1776,22 @@ namespace Content.Shared.CCVar
 
 
         /*
+         * Onboarding
+         */
+
+        /// <summary>
+        /// Whether or not this server has onboardings enabled
+        /// </summary>
+        public static readonly CVarDef<bool> OnboardingEnabled =
+            CVarDef.Create("onboarding.enabled", true, CVar.SERVER | CVar.REPLICATED);
+
+        /// <summary>
+        /// Level of onboarding this user has selected
+        /// </summary>
+        public static readonly CVarDef<string> OnboardingUserLevel =
+            CVarDef.Create("onboarding.user_level", "", CVar.CLIENTONLY | CVar.ARCHIVE);
+
+        /*
          * Rules
          */
 

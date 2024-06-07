@@ -1,0 +1,23 @@
+- type: onboardingCategory
+  id: None
+  data:
+    name: None. I already know the whole game
+    helpLevel: 0
+
+- type: onboardingCategory
+  id: Basic
+  data:
+    name: Basic. I know a lot of things about the game
+    helpLevel: 1
+
+- type: onboardingCategory
+  id: Medium
+  data:
+    name: Medium. I know a little about the game
+    helpLevel: 2
+
+- type: onboardingCategory
+  id: Complete
+  data:
+    name: Complete. I know nothing about the game
+    helpLevel: 3

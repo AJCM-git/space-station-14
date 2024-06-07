@@ -1,0 +1,13 @@
+<controls:OnboardingPopup
+    xmlns="https://spacestation14.io"
+    xmlns:controls="clr-namespace:Content.Client.UserInterface.Systems.Onboarding.Controls"
+    MinSize="100 100">
+    <BoxContainer>
+        <RichTextLabel Name="Message"/>
+    </BoxContainer>
+    <Button Name="CloseButton"/>
+    <Button Name="NextButton"/>
+    <Button Name="PreviousButton"/>
+    <RichTextLabel Name="EntriesCount"/>
+
+</controls:OnboardingPopup>
