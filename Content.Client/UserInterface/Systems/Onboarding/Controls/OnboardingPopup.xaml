@@ -1,13 +1,20 @@
 <controls:OnboardingPopup
     xmlns="https://spacestation14.io"
     xmlns:controls="clr-namespace:Content.Client.UserInterface.Systems.Onboarding.Controls"
-    MinSize="100 100">
-    <BoxContainer>
-        <RichTextLabel Name="Message"/>
-    </BoxContainer>
-    <Button Name="CloseButton"/>
-    <Button Name="NextButton"/>
-    <Button Name="PreviousButton"/>
-    <RichTextLabel Name="EntriesCount"/>
+    xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+    MaxSize="300 400">
+    <PanelContainer VerticalExpand="True" HorizontalExpand="True" StyleClasses="AngleRect">
+        <PanelContainer VerticalExpand="True" HorizontalExpand="True" Margin="20">
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#1B1B1E"/>
+            </PanelContainer.PanelOverride>
+            <RichTextLabel Name="Message"/>
+        </PanelContainer>
+        <BoxContainer Orientation="Horizontal" Margin="0 30 0 0" HorizontalAlignment="Center">
+            <Button Name="NextButton" StyleClasses="OpenRight"/>
+            <RichTextLabel Name="EntriesCount"/>
+            <Button Name="PrevButton" Text="{Loc 'onboarding-confirm-button'}" SetSize="80 40" StyleClasses="OpenLeft"/>
+        </BoxContainer>
+    </PanelContainer>
 
 </controls:OnboardingPopup>

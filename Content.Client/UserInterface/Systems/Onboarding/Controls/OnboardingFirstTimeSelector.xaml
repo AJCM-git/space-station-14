@@ -1,0 +1,23 @@
+<controls:OnboardingFirstTimeSelector
+    xmlns="https://spacestation14.io"
+    xmlns:controls="clr-namespace:Content.Client.UserInterface.Systems.Onboarding.Controls"
+    xmlns:graphics="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
+    SetSize="400 300">
+    <PanelContainer VerticalExpand="True" HorizontalExpand="True" StyleClasses="AngleRect">
+        <PanelContainer.PanelOverride>
+            <graphics:StyleBoxFlat BackgroundColor="#2F2F3B"/>
+        </PanelContainer.PanelOverride>
+        <PanelContainer VerticalExpand="True" HorizontalExpand="True" Margin="20">
+            <PanelContainer.PanelOverride>
+                <graphics:StyleBoxFlat BackgroundColor="#1B1B1E"/>
+            </PanelContainer.PanelOverride>
+            <BoxContainer Orientation="Vertical" Margin="20">
+                <RichTextLabel Name="Message"/>
+                <BoxContainer Orientation="Horizontal" Margin="0 30 0 0" HorizontalAlignment="Center">
+                    <controls:OnboardingCategorySelector Name="CategorySelector" StyleClasses="OpenRight"/>
+                    <Button Name="ConfirmButton" Text="{Loc 'onboarding-confirm-button'}" SetSize="80 40" StyleClasses="OpenLeft"/>
+                </BoxContainer>
+            </BoxContainer>
+        </PanelContainer>
+    </PanelContainer>
+</controls:OnboardingFirstTimeSelector>

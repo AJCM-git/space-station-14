@@ -3,7 +3,8 @@
                   xmlns:tabs="clr-namespace:Content.Client.Options.UI.Tabs"
                   xmlns:xNamespace="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:s="clr-namespace:Content.Client.Stylesheets"
-                  xmlns:onboarding="clr-namespace:Content.Client.UserInterface.Systems.Onboarding.Controls">
+                  xmlns:onboarding="clr-namespace:Content.Client.UserInterface.Systems.Onboarding.Controls"
+                  xmlns:customControls="clr-namespace:Content.Client.Administration.UI.CustomControls">
     <BoxContainer Orientation="Vertical">
         <ScrollContainer VerticalExpand="True" HorizontalExpand="True">
             <BoxContainer Orientation="Vertical" Margin="8 8 8 8" VerticalExpand="True">
@@ -26,7 +27,10 @@
                 <CheckBox Name="ReducedMotionCheckBox" Text="{Loc 'ui-options-reduced-motion'}" />
                 <CheckBox Name="EnableColorNameCheckBox" Text="{Loc 'ui-options-enable-color-name'}" />
                 <CheckBox Name="ColorblindFriendlyCheckBox" Text="{Loc 'ui-options-colorblind-friendly'}" />
-                <onboarding:OnboardingSelector/>
+                <BoxContainer Orientation="Horizontal">
+                    <Label Text="{Loc 'ui-options-onboarding-level'}" Margin="8"/>
+                    <onboarding:OnboardingCategorySelector Name="OnboardingSelector"/>
+                </BoxContainer>
                 <BoxContainer Orientation="Horizontal">
                     <Label Text="{Loc 'ui-options-chat-window-opacity'}" Margin="8 0" />
                     <Slider Name="ChatWindowOpacitySlider"

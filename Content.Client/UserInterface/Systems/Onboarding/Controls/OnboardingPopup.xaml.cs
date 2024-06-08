@@ -6,16 +6,19 @@ using Robust.Shared.Utility;
 namespace Content.Client.UserInterface.Systems.Onboarding.Controls;
 
 [GenerateTypedNameReferences]
-public sealed partial class OnboardingPopup : Popup
+public sealed partial class OnboardingPopup : PanelContainer
 {
+    private Queue<string> Entries = new();
+
     public OnboardingPopup()
     {
         RobustXamlLoader.Load(this);
 
-        CloseOnClick = false;
-
         Message.SetMessage(FormattedMessage.FromMarkupPermissive("AAAAAAAAAAAAAAAAAAAAAAAa"));
-        CloseButton.OnPressed += _ => Close();
+        NextButton.OnPressed += _ =>
+        {
+            Dispose();
+        };
         EntriesCount.SetMessage(FormattedMessage.FromMarkupPermissive("1/4"));
     }
 }

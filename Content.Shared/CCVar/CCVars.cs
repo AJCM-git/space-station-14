@@ -1,4 +1,5 @@
 using Content.Shared.Maps;
+using Content.Shared.Onboarding;
 using Content.Shared.Roles;
 using Robust.Shared;
 using Robust.Shared.Configuration;
@@ -1793,10 +1794,12 @@ namespace Content.Shared.CCVar
             CVarDef.Create("onboarding.enabled", true, CVar.SERVER | CVar.REPLICATED);
 
         /// <summary>
-        /// Level of onboarding this user has selected
+        /// Level of onboarding this user has selected.
+        /// Value must be present in a <see cref="OnboardingCategoryPrototype"/>
+        /// A value of -1 implies that this has never been set
         /// </summary>
-        public static readonly CVarDef<string> OnboardingUserLevel =
-            CVarDef.Create("onboarding.user_level", "", CVar.CLIENTONLY | CVar.ARCHIVE);
+        public static readonly CVarDef<int> OnboardingHelpLevel =
+            CVarDef.Create("onboarding.help_level", -1, CVar.CLIENTONLY | CVar.ARCHIVE);
 
         /*
          * Rules
